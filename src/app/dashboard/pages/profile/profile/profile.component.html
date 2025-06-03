@@ -1,0 +1,209 @@
+<div class="profile-container">
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Cargando perfil...</p>
+  </div>
+
+  <div *ngIf="!loading && user" class="profile-content">
+    <mat-card class="profile-header-card">
+      <mat-card-header>
+        <div mat-card-avatar class="user-avatar" [style.background-color]="selectedAvatarColor">
+          {{ getInitial() }}
+        </div>
+        <mat-card-title>{{ user.name }}</mat-card-title>
+        <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-number">{{ getCompletedTasks() }}</span>
+            <span class="stat-label">Tareas completadas</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">{{ getPendingTasks() }}</span>
+            <span class="stat-label">Tareas pendientes</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">{{ getTaskLists() }}</span>
+            <span class="stat-label">Listas de tareas</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="profile-form-card">
+      <mat-card-header>
+        <mat-card-title>Información personal</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="profileForm" (ngSubmit)="onSaveProfile()">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="name" placeholder="Tu nombre">
+              <mat-error *ngIf="profileForm.get('name')?.hasError('required')">
+                El nombre es obligatorio
+              </mat-error>
+              <mat-error *ngIf="profileForm.get('name')?.hasError('minlength')">
+                El nombre debe tener al menos 3 caracteres
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" readonly>
+              <mat-hint>El email no se puede cambiar</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <div class="avatar-color-section">
+              <label class="section-label">Color del avatar</label>
+              <div class="color-picker">
+                <div
+                  *ngFor="let color of avatarOptions"
+                  class="color-option"
+                  [class.selected]="selectedAvatarColor === color"
+                  [style.background-color]="color"
+                  (click)="selectAvatarColor(color)">
+                  <mat-icon *ngIf="selectedAvatarColor === color">check</mat-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="theme-section">
+              <label class="section-label">Tema</label>
+              <div class="theme-picker">
+                <div
+                  *ngFor="let theme of themes"
+                  class="theme-option"
+                  [class.selected]="selectedTheme === theme.value"
+                  (click)="selectTheme(theme.value)">
+                  <div class="theme-preview" [style.background-color]="theme.color"></div>
+                  <span class="theme-name">{{ theme.label }}</span>
+                  <mat-icon *ngIf="selectedTheme === theme.value">check_circle</mat-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Biografía</mat-label>
+              <textarea matInput formControlName="bio" rows="3" placeholder="Cuéntanos sobre ti"></textarea>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Ubicación</mat-label>
+              <input matInput formControlName="location" placeholder="Tu ubicación">
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Sitio web</mat-label>
+              <input matInput formControlName="website" placeholder="https://tusitio.com">
+            </mat-form-field>
+          </div>
+
+          <div class="form-actions">
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="profileForm.invalid || loading">
+              <mat-icon>save</mat-icon>
+              Guardar cambios
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="password-card">
+      <mat-card-header>
+        <mat-card-title>Cambiar contraseña</mat-card-title>
+        <button
+          mat-button
+          color="primary"
+          (click)="togglePasswordForm()">
+          {{ showPasswordForm ? 'Cancelar' : 'Cambiar contraseña' }}
+        </button>
+      </mat-card-header>
+
+      <mat-card-content *ngIf="showPasswordForm">
+        <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Contraseña actual</mat-label>
+              <input matInput type="password" formControlName="currentPassword">
+              <mat-error *ngIf="passwordForm.get('currentPassword')?.hasError('required')">
+                La contraseña actual es obligatoria
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nueva contraseña</mat-label>
+              <input matInput type="password" formControlName="newPassword">
+              <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('required')">
+                La nueva contraseña es obligatoria
+              </mat-error>
+              <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('minlength')">
+                La contraseña debe tener al menos 6 caracteres
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Confirmar contraseña</mat-label>
+              <input matInput type="password" formControlName="confirmPassword">
+              <mat-error *ngIf="passwordForm.hasError('passwordMismatch')">
+                Las contraseñas no coinciden
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-actions">
+            <button
+              mat-raised-button
+              color="warn"
+              type="submit"
+              [disabled]="passwordForm.invalid || loading">
+              <mat-icon>lock</mat-icon>
+              Cambiar contraseña
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="danger-zone">
+      <mat-card-header>
+        <mat-card-title>Zona de peligro</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p>Una vez que elimines tu cuenta, no hay vuelta atrás. Por favor, estate seguro.</p>
+        <button
+          mat-raised-button
+          color="warn"
+          (click)="onDeleteAccount()"
+          [disabled]="loading">
+          <mat-icon>delete_forever</mat-icon>
+          Eliminar cuenta
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

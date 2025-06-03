@@ -1,0 +1,192 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col-12">
+      <button mat-button (click)="goBack()" class="mb-3">
+        <mat-icon>arrow_back</mat-icon>
+        Volver a eventos
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="d-flex justify-content-center my-5">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading && globalEvent" class="row">
+    <div class="col-md-8">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ globalEvent.title }}</mat-card-title>
+          <mat-card-subtitle>
+            <span class="event-status" [ngClass]="{
+              'status-active': isEventActive(),
+              'status-upcoming': isEventUpcoming(),
+              'status-past': isEventPast(),
+              'status-inactive': !globalEvent.isActive
+            }">
+              <mat-icon class="status-icon">
+                {{ isEventActive() ? 'event_available' :
+                   isEventUpcoming() ? 'schedule' :
+                   isEventPast() ? 'event_busy' : 'event_note' }}
+              </mat-icon>
+              {{ isEventActive() ? 'Evento Activo' :
+                 isEventUpcoming() ? 'Próximo' :
+                 isEventPast() ? 'Finalizado' : 'Inactivo' }}
+            </span>
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="event-details">
+            <div class="detail-section">
+              <h3>
+                <mat-icon>description</mat-icon>
+                Descripción
+              </h3>
+              <p *ngIf="globalEvent.description; else noDescription">
+                {{ globalEvent.description }}
+              </p>
+              <ng-template #noDescription>
+                <p class="text-muted">Sin descripción disponible</p>
+              </ng-template>
+            </div>
+
+            <mat-divider class="my-4"></mat-divider>
+
+            <div class="detail-section">
+              <h3>
+                <mat-icon>schedule</mat-icon>
+                Fechas y horarios
+              </h3>
+
+              <div class="date-info">
+                <div class="date-item">
+                  <strong>Fecha de inicio:</strong>
+                  <span>{{ globalEvent.startDate | date:'fullDate':'':'es' }}</span>
+                </div>
+
+                <div class="date-item">
+                  <strong>Fecha de finalización:</strong>
+                  <span>{{ globalEvent.endDate | date:'fullDate':'':'es' }}</span>
+                </div>
+
+                <div class="date-item" *ngIf="getDurationInDays() > 0">
+                  <strong>Duración:</strong>
+                  <span>{{ getDurationInDays() }} día{{ getDurationInDays() !== 1 ? 's' : '' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <mat-divider class="my-4"></mat-divider>
+
+            <div class="detail-section">
+              <h3>
+                <mat-icon>info</mat-icon>
+                Información adicional
+              </h3>
+
+              <div class="info-grid">
+                <div class="info-item">
+                  <strong>Estado:</strong>
+                  <span [ngClass]="{
+                    'text-success': globalEvent.isActive,
+                    'text-muted': !globalEvent.isActive
+                  }">
+                    {{ globalEvent.isActive ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </div>
+
+                <div class="info-item">
+                  <strong>Creado:</strong>
+                  <span>{{ globalEvent.createdAt | date:'short':'':'es' }}</span>
+                </div>
+
+                <div class="info-item">
+                  <strong>Última actualización:</strong>
+                  <span>{{ globalEvent.updatedAt | date:'short':'':'es' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions *ngIf="isAdmin">
+          <button mat-raised-button color="warn" (click)="deleteGlobalEvent()">
+            <mat-icon>delete</mat-icon>
+            Eliminar
+          </button>
+          <button mat-raised-button color="primary" (click)="editGlobalEvent()">
+            <mat-icon>edit</mat-icon>
+            Editar
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+    <div class="col-md-4">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>calendar_today</mat-icon>
+            Vista rápida
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="quick-info">
+            <div class="quick-info-item">
+              <div class="info-label">Inicio</div>
+              <div class="info-value">{{ globalEvent.startDate | date:'shortDate':'':'es' }}</div>
+            </div>
+
+            <div class="quick-info-item">
+              <div class="info-label">Fin</div>
+              <div class="info-value">{{ globalEvent.endDate | date:'shortDate':'':'es' }}</div>
+            </div>
+
+            <div class="quick-info-item">
+              <div class="info-label">Estado del evento</div>
+              <div class="info-value">
+                <mat-icon class="small-icon" [ngClass]="{
+                  'text-success': isEventActive(),
+                  'text-warning': isEventUpcoming(),
+                  'text-muted': isEventPast() || !globalEvent.isActive
+                }">
+                  {{ isEventActive() ? 'play_circle' :
+                     isEventUpcoming() ? 'schedule' :
+                     'stop_circle' }}
+                </mat-icon>
+                {{ isEventActive() ? 'En curso' :
+                   isEventUpcoming() ? 'Próximo' :
+                   'Finalizado' }}
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="mt-3" *ngIf="isAdmin">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>admin_panel_settings</mat-icon>
+            Acciones de administrador
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="admin-actions">
+            <button mat-stroked-button color="primary" (click)="editGlobalEvent()" class="w-100 mb-2">
+              <mat-icon>edit</mat-icon>
+              Editar evento
+            </button>
+
+            <button mat-stroked-button color="warn" (click)="deleteGlobalEvent()" class="w-100">
+              <mat-icon>delete</mat-icon>
+              Eliminar evento
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+<!-- <h2 mat-dialog-title>{{ data.title }}</h2>
+<div mat-dialog-content>
+  <p>{{ data.message }}</p>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onNoClick()">{{ data.cancelButtonText || 'Cancelar' }}</button>
+  <button mat-raised-button color="warn" (click)="onYesClick()">{{ data.confirmButtonText || 'Confirmar' }}</button>
+</div>
+ -->
+
+ <h2 mat-dialog-title>Confirmar eliminación</h2>
+<mat-dialog-content>
+  {{ data.message }}
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-fab extended (click)="onNoClick()">
+    <mat-icon>cancel</mat-icon>
+    Cancelar
+  </button>
+  <button mat-fab extended color="warn" (click)="onConfirmClick()">
+    <mat-icon>delete</mat-icon>
+    Eliminar
+  </button>
+</mat-dialog-actions>

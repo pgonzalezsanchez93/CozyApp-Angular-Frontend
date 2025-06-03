@@ -1,0 +1,50 @@
+<h2 mat-dialog-title>{{ dialogTitle }}</h2>
+
+<form [formGroup]="taskListForm" (ngSubmit)="onSubmit()">
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline" class="w-100 mb-3">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="name" placeholder="Nombre de la lista">
+      <mat-error *ngIf="taskListForm.get('name')?.errors?.['required']">
+        El nombre es obligatorio
+      </mat-error>
+      <mat-error *ngIf="taskListForm.get('name')?.errors?.['minlength']">
+        El nombre debe tener al menos 2 caracteres
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100 mb-3">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput formControlName="description" placeholder="Descripción de la lista" rows="2"></textarea>
+    </mat-form-field>
+
+    <div class="mb-3">
+      <label class="form-label">Color</label>
+      <div class="color-picker">
+        <div
+          *ngFor="let color of colorOptions"
+          class="color-option"
+          [style.background-color]="color"
+          [class.selected]="taskListForm.get('color')?.value === color"
+          (click)="taskListForm.get('color')?.setValue(color)">
+        </div>
+      </div>
+    </div>
+
+    <mat-form-field appearance="outline" class="w-100 mb-3">
+      <mat-label>Icono</mat-label>
+      <mat-select formControlName="icon">
+        <mat-option *ngFor="let icon of iconOptions" [value]="icon.value">
+          <mat-icon>{{icon.value}}</mat-icon> {{icon.label}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="taskListForm.invalid">
+      {{ isEditMode ? 'Actualizar' : 'Crear' }}
+    </button>
+  </div>
+</form>

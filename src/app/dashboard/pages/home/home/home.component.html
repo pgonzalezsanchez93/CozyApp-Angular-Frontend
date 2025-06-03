@@ -1,0 +1,186 @@
+<div class="dashboard-container">
+  <div class="welcome-section">
+    <h1 class="welcome-title">¡Hola, {{ user?.name }}!</h1>
+    <p class="welcome-subtitle">Aquí tienes un resumen de tu productividad de hoy</p>
+  </div>
+
+  <div class="stats-grid" *ngIf="!loading">
+    <mat-card class="stat-card total-tasks">
+      <div class="stat-content">
+        <div class="stat-icon">
+          <mat-icon>assignment</mat-icon>
+        </div>
+        <div class="stat-info">
+          <div class="stat-number">{{ stats.totalTasks }}</div>
+          <div class="stat-label">Tareas totales</div>
+        </div>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card completed-tasks">
+      <div class="stat-content">
+        <div class="stat-icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="stat-info">
+          <div class="stat-number">{{ stats.completedTasks }}</div>
+          <div class="stat-label">Completadas</div>
+        </div>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card pending-tasks">
+      <div class="stat-content">
+        <div class="stat-icon">
+          <mat-icon>schedule</mat-icon>
+        </div>
+        <div class="stat-info">
+          <div class="stat-number">{{ stats.pendingTasks }}</div>
+          <div class="stat-label">Pendientes</div>
+        </div>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card total-lists">
+      <div class="stat-content">
+        <div class="stat-icon">
+          <mat-icon>list</mat-icon>
+        </div>
+        <div class="stat-info">
+          <div class="stat-number">{{ stats.totalLists }}</div>
+          <div class="stat-label">Listas</div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <div class="loading-section" *ngIf="loading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Cargando datos...</p>
+  </div>
+
+  <div class="quick-actions-section" *ngIf="!loading">
+    <h2>Acciones rápidas</h2>
+    <div class="quick-links-grid">
+      <mat-card
+        *ngFor="let link of quickLinks; let i = index"
+        class="quick-link-card"
+        [ngClass]="'quick-link-' + i"
+        (click)="onQuickLinkClick(link)"
+        matRipple>
+        <div class="quick-link-content">
+          <mat-icon class="quick-link-icon">{{ link.icon }}</mat-icon>
+          <span class="quick-link-title">{{ link.title }}</span>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="today-tasks-section" *ngIf="!loading">
+    <div class="section-header">
+      <h2>Tareas de hoy</h2>
+      <div class="task-count-chip">
+        <span class="chip-content">{{ todayTasks.length }} tarea{{ todayTasks.length !== 1 ? 's' : '' }}</span>
+      </div>
+    </div>
+
+    <div class="today-tasks-content">
+      <div *ngIf="todayTasks.length === 0" class="empty-state">
+        <mat-icon>today</mat-icon>
+        <p>No tienes tareas programadas para hoy</p>
+        <button mat-raised-button color="primary" class="create-task-button" (click)="openCreateTaskDialog()">
+          <mat-icon>add</mat-icon>
+          <span>Crear tarea</span>
+        </button>
+      </div>
+
+      <div *ngIf="todayTasks.length > 0" class="tasks-list">
+        <mat-card
+          *ngFor="let task of todayTasks; trackBy: trackByTaskId"
+          class="task-card"
+          [ngClass]="{
+            'completed-task': task.isCompleted,
+            'overdue-task': isOverdue(task)
+          }">
+
+          <div class="task-content">
+            <div class="task-checkbox">
+              <mat-checkbox
+                [checked]="task.isCompleted"
+                (change)="toggleTaskCompletion(task)"
+                color="primary">
+              </mat-checkbox>
+            </div>
+
+            <div class="task-info">
+              <div class="task-title" [ngClass]="{'completed': task.isCompleted}">
+                {{ task.title }}
+              </div>
+
+              <div class="task-meta">
+                <span *ngIf="task.startTime" class="task-time">
+                  <mat-icon>schedule</mat-icon>
+                  {{ formatTime(task.startTime) }}
+                  <span *ngIf="task.endTime"> - {{ formatTime(task.endTime) }}</span>
+                </span>
+
+                <span *ngIf="getTaskListName(task)" class="task-list">
+                  <mat-icon [style.color]="getTaskListColor(task)">list</mat-icon>
+                  {{ getTaskListName(task) }}
+                </span>
+              </div>
+            </div>
+
+            <div class="task-actions">
+              <button mat-icon-button
+                      matTooltip="Ver detalles"
+                      [routerLink]="['/dashboard/tasks', task._id]">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-section" *ngIf="!loading && stats.totalTasks > 0">
+    <h2>Progreso general</h2>
+    <mat-card class="progress-card">
+      <div class="progress-content">
+        <div class="progress-info">
+          <span class="progress-label">Progreso de completado</span>
+          <span class="progress-percentage">{{ stats.completionRate }}%</span>
+        </div>
+        <mat-progress-bar
+          mode="determinate"
+          [value]="stats.completionRate"
+          color="primary">
+        </mat-progress-bar>
+        <div class="progress-details">
+          <span>{{ stats.completedTasks }} de {{ stats.totalTasks }} tareas completadas</span>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+  <div class="progress-section" *ngIf="!loading && stats.todayActiveTasks > 0">
+    <h2>Progreso de hoy</h2>
+    <mat-card class="progress-card today-progress">
+      <div class="progress-content">
+        <div class="progress-info">
+          <span class="progress-label">Progreso de tareas activas hoy</span>
+          <span class="progress-percentage">{{ stats.todayCompletionRate }}%</span>
+        </div>
+        <mat-progress-bar
+          mode="determinate"
+          [value]="stats.todayCompletionRate"
+          color="accent">
+        </mat-progress-bar>
+        <div class="progress-details">
+          <span>{{ stats.todayCompletedTasks }} de {{ stats.todayActiveTasks }} tareas de hoy completadas</span>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

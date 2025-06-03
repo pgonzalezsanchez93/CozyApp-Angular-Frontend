@@ -1,0 +1,105 @@
+<div class="container">
+  <div class="row mb-4">
+    <div class="col-12">
+      <button mat-stroked-button color="primary" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon> Volver a la lista
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="d-flex justify-content-center my-5">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading && task" class="row">
+    <div class="col-12">
+      <mat-card class="task-detail-card" [ngClass]="{'completed-task': task.isCompleted}">
+        <mat-card-header>
+          <div mat-card-avatar>
+            <button mat-mini-fab [color]="task.isCompleted ? 'accent' : 'primary'" (click)="toggleTaskCompletion()">
+              <mat-icon>{{ task.isCompleted ? 'check' : 'pending' }}</mat-icon>
+            </button>
+          </div>
+          <mat-card-title>
+            <div class="d-flex align-items-center">
+              <span [ngClass]="{'completed-title': task.isCompleted}">{{ task.title }}</span>
+              <span *ngIf="task.priority" class="ms-2 priority-badge" [ngClass]="{
+                'priority-low': task.priority === 'low',
+                'priority-medium': task.priority === 'medium',
+                'priority-high': task.priority === 'high'
+              }">
+                {{task.priority === 'low' ? 'Baja' : task.priority === 'medium' ? 'Media' : 'Alta'}}
+              </span>
+            </div>
+          </mat-card-title>
+          <mat-card-subtitle *ngIf="taskList">
+            <span class="list-badge" [style.background-color]="taskList.color">
+              <mat-icon class="list-icon">{{ taskList.icon || 'list' }}</mat-icon>
+              {{ taskList.name }}
+            </span>
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content class="mt-3">
+          <div *ngIf="task.description" class="description-container mb-4">
+            <h3>Descripción</h3>
+            <p [ngClass]="{'completed-text': task.isCompleted}">{{ task.description }}</p>
+          </div>
+
+          <div class="task-info-container">
+            <div class="task-info-item" *ngIf="task.dueDate" [ngClass]="{'overdue': isOverdue()}">
+              <mat-icon>event</mat-icon>
+              <span>Fecha límite: {{ task.dueDate | date:'fullDate' }}</span>
+            </div>
+
+            <div class="task-info-item" *ngIf="task.startTime">
+              <mat-icon>schedule</mat-icon>
+              <span>Hora de inicio: {{ task.startTime }} h</span>
+            </div>
+
+            <div class="task-info-item" *ngIf="task.endTime">
+              <mat-icon>schedule</mat-icon>
+              <span>Hora de finalización: {{ task.endTime }} h</span>
+            </div>
+
+            <div class="task-info-item" *ngIf="!task.startTime && !task.endTime">
+              <mat-icon>today</mat-icon>
+              <span>Todo el día</span>
+            </div>
+        
+
+            <div class="task-info-item" *ngIf="task.status">
+              <mat-icon>flag</mat-icon>
+              <span>Estado: {{ task.status === 'pending' ? 'Pendiente' :
+                              task.status === 'in_progress' ? 'En progreso' : 'Completada' }}</span>
+            </div>
+
+            <div class="task-info-item" *ngIf="task.completedAt">
+              <mat-icon>check_circle</mat-icon>
+              <span class="completed-text">Completada el: {{ task.completedAt | date:'fullDate' }}</span>
+            </div>
+
+            <div class="task-info-item">
+              <mat-icon>schedule</mat-icon>
+              <span>Creada el: {{ task.createdAt | date:'fullDate' }}</span>
+            </div>
+
+            <div class="task-info-item">
+              <mat-icon>update</mat-icon>
+              <span>Última actualización: {{ task.updatedAt | date:'fullDate' }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions align="end">
+          <button mat-stroked-button color="warn" (click)="deleteTask()">
+            <mat-icon>delete</mat-icon> Eliminar
+          </button>
+          <button mat-raised-button color="primary" (click)="editTask()">
+            <mat-icon>edit</mat-icon> Editar
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

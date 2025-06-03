@@ -1,0 +1,184 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2 class="page-title">Pomodoro Timer</h2>
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="openSettingsDialog()" 
+          aria-label="Configurar temporizador"
+          matTooltip="Configurar tiempos y opciones">
+          <mat-icon>tune</mat-icon>
+          Configurar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8 col-lg-6 mx-auto">
+      <mat-card class="pomodoro-card" [ngClass]="
+        pomodoroState.mode === 'work' ? 'work-mode' :
+        pomodoroState.mode === 'shortBreak' ? 'short-break-mode' : 'long-break-mode'
+      ">
+        <mat-card-content class="text-center py-5">
+          <div class="timer-mode-selector mb-4">
+            <div class="custom-button-toggle-group">
+              <button
+                mat-button
+                [class.active]="pomodoroState.mode === 'work'"
+                [disabled]="pomodoroState.status === 'running'"
+                (click)="changeMode('work')"
+                matTooltip="Cambiar a modo trabajo">
+                Trabajo
+              </button>
+              <button
+                mat-button
+                [class.active]="pomodoroState.mode === 'shortBreak'"
+                [disabled]="pomodoroState.status === 'running'"
+                (click)="changeMode('shortBreak')"
+                matTooltip="Cambiar a descanso corto">
+                Descanso Corto
+              </button>
+              <button
+                mat-button
+                [class.active]="pomodoroState.mode === 'longBreak'"
+                [disabled]="pomodoroState.status === 'running'"
+                (click)="changeMode('longBreak')"
+                matTooltip="Cambiar a descanso largo">
+                Descanso Largo
+              </button>
+            </div>
+          </div>
+
+          <div class="timer-display mb-4">
+            <h1 class="timer-text" 
+                [attr.aria-label]="'Tiempo restante: ' + formatTime(pomodoroState.timeRemaining)">
+              {{ formatTime(pomodoroState.timeRemaining) }}
+            </h1>
+          </div>
+
+          <div class="progress-container mb-4">
+            <mat-progress-bar 
+              mode="determinate" 
+              [value]="getProgressPercentage()"
+              class="timer-progress"
+              [attr.aria-label]="'Progreso del timer: ' + getProgressPercentage().toFixed(0) + '%'">
+            </mat-progress-bar>
+          </div>
+
+          <div class="timer-controls mb-4">
+            <button
+              *ngIf="pomodoroState.status === 'idle' || pomodoroState.status === 'paused' || pomodoroState.status === 'completed'"
+              mat-fab
+              color="primary"
+              (click)="startTimer()"
+              class="mx-2 control-button"
+              matTooltip="Iniciar timer"
+              aria-label="Iniciar temporizador">
+              <mat-icon>play_arrow</mat-icon>
+            </button>
+
+            <button
+              *ngIf="pomodoroState.status === 'running'"
+              mat-fab
+              color="warn"
+              (click)="pauseTimer()"
+              class="mx-2 control-button"
+              matTooltip="Pausar timer"
+              aria-label="Pausar temporizador">
+              <mat-icon>pause</mat-icon>
+            </button>
+
+            <button
+              mat-fab
+              color="accent"
+              (click)="resetTimer()"
+              [disabled]="pomodoroState.status === 'idle'"
+              class="mx-2 control-button"
+              matTooltip="Reiniciar timer"
+              aria-label="Reiniciar temporizador">
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </div>
+
+          <div class="session-info mt-4">
+            <div class="session-detail mb-3">
+              <span class="session-label">Estado:</span>
+              <span class="session-value">
+                {{ pomodoroState.status === 'idle' ? 'Detenido' :
+                   pomodoroState.status === 'running' ? 'Corriendo' :
+                   pomodoroState.status === 'paused' ? 'Pausado' : 'Completado' }}
+              </span>
+            </div>
+
+            <div class="session-detail mb-3">
+              <span class="session-label">Modo actual:</span>
+              <span class="session-value">
+                {{ pomodoroState.mode === 'work' ? 'Trabajo' :
+                   pomodoroState.mode === 'shortBreak' ? 'Descanso Corto' : 'Descanso Largo' }}
+              </span>
+            </div>
+
+            <div class="session-detail mb-3">
+              <span class="session-label">Sesiones completadas:</span>
+              <span class="session-value">{{ pomodoroState.completedPomodoros }}</span>
+            </div>
+
+            <div class="cycle-progress mb-3">
+              <div class="cycle-progress-label mb-2">
+                <span>Progreso del ciclo: {{ getCycleProgressText() }}</span>
+              </div>
+              <mat-progress-bar 
+                mode="determinate" 
+                [value]="getCycleProgressPercentage()"
+                class="cycle-progress-bar"
+                color="accent"
+                [attr.aria-label]="'Progreso del ciclo completo: ' + getCycleProgressPercentage().toFixed(0) + '%'">
+              </mat-progress-bar>
+            </div>
+
+            <div class="auto-continue-toggle">
+              <div class="d-flex align-items-center justify-content-center">
+                <span class="me-2">Modo automático:</span>
+                <span class="session-value">{{ autoContinue ? 'Activado' : 'Desactivado' }}</span>
+              </div>
+              <p class="text-muted small mt-2 mb-0">
+                {{ autoContinue ? 'El timer continuará automáticamente al siguiente modo' : 'El timer se detendrá al completar cada intervalo' }}
+              </p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-8 col-lg-6 mx-auto">
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>Acerca de la Técnica Pomodoro</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="pt-3">
+          <p>La técnica Pomodoro es un método de gestión del tiempo desarrollado por Francesco Cirillo a finales de los años 1980, que utiliza un temporizador para dividir el trabajo en intervalos (tradicionalmente de 25 minutos) separados por breves descansos.</p>
+
+          <h4 class="mt-4">Cómo funciona:</h4>
+          <ol>
+            <li><strong>Trabajo:</strong> Concentración total durante el intervalo de trabajo.</li>
+            <li><strong>Descanso Corto:</strong> Pequeña pausa de 5 minutos tras cada intervalo de trabajo.</li>
+            <li><strong>Descanso Largo:</strong> Después de completar 4 ciclos de trabajo, toma un descanso más largo de 15-30 minutos.</li>
+          </ol>
+
+          <h4 class="mt-4">Beneficios:</h4>
+          <ul>
+            <li>Reduce la fatiga mental y mejora la concentración</li>
+            <li>Aumenta la conciencia sobre cómo utilizas tu tiempo</li>
+            <li>Ayuda a evitar distracciones y procrastinación</li>
+            <li>Mejora la calidad de tu trabajo</li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

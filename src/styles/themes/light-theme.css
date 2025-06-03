@@ -1,0 +1,118 @@
+.theme-light {
+  --primary-color: #6200ea;
+  --accent-color: #018786;
+  --warn-color: #b00020;
+  --background-color: #ffffff;
+  --surface-color: #f8f9fa;
+  --text-primary: #000000;
+  --text-secondary: #5f6368;
+  --text-disabled: #9aa0a6;
+  --divider-color: #dadce0;
+  --success-color: #137333;
+  --warning-color: #ea8600;
+  --info-color: #1a73e8;
+  --error-color: #d93025;
+
+  background-color: var(--background-color);
+  color: var(--text-primary);
+}
+
+.theme-light .mat-toolbar {
+  background-color: var(--surface-color) !important;
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--divider-color);
+}
+
+.theme-light .mat-toolbar * {
+  color: var(--text-primary) !important;
+}
+
+.theme-light .mat-card {
+  background-color: var(--surface-color) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--divider-color);
+}
+
+.theme-light .mat-card * {
+  color: var(--text-primary) !important;
+}
+
+.theme-light .mat-sidenav {
+  background-color: var(--background-color) !important;
+  color: var(--text-primary) !important;
+  border-right: 1px solid var(--divider-color);
+}
+
+.theme-light .mat-raised-button.mat-primary {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+.theme-light .mat-raised-button.mat-primary * {
+  color: white !important;
+}
+
+.theme-light .mat-raised-button.mat-accent {
+  background-color: var(--accent-color) !important;
+  color: white !important;
+}
+
+.theme-light .mat-raised-button.mat-accent * {
+  color: white !important;
+}
+
+.theme-light .mat-raised-button.mat-warn {
+  background-color: var(--warn-color) !important;
+  color: white !important;
+}
+
+.theme-light .mat-raised-button.mat-warn * {
+  color: white !important;
+}
+
+.theme-light .text-primary { 
+  color: var(--primary-color) !important; 
+}
+
+.theme-light .text-success { 
+  color: var(--success-color) !important; 
+}
+
+.theme-light .text-warning { 
+  color: var(--warning-color) !important; 
+}
+
+.theme-light .text-danger { 
+  color: var(--error-color) !important; 
+}
+
+.theme-light .text-info { 
+  color: var(--info-color) !important; 
+}
+
+.theme-light .task-item {
+  border-left-color: var(--primary-color);
+  background-color: var(--background-color);
+}
+
+.theme-light .task-item.completed {
+  border-left-color: var(--success-color);
+  background-color: rgba(19, 115, 51, 0.05);
+}
+
+.theme-light .task-item.overdue {
+  border-left-color: var(--error-color);
+  background-color: rgba(217, 48, 37, 0.05);
+}
+
+.theme-light .priority-high { 
+  background-color: var(--error-color) !important; 
+}
+
+.theme-light .priority-medium { 
+  background-color: var(--warning-color) !important; 
+}
+
+.theme-light .priority-low { 
+  background-color: var(--success-color) !important; 
+}

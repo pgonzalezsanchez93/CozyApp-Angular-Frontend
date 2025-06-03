@@ -1,0 +1,102 @@
+<div class="container" *ngIf="taskList">
+  <div class="header">
+    <h2>{{ taskList.name }}</h2>
+    <div class="list-color-indicator" [style.backgroundColor]="taskList.color"></div>
+    <mat-icon>{{ taskList.icon || 'list' }}</mat-icon>
+  </div>
+
+  <div class="stats">
+    <div class="stat-item">
+      <mat-icon>assignment</mat-icon>
+      <span>Pendientes: {{ getPendingTasksCount() }}</span>
+    </div>
+
+    <div class="stat-item">
+      <mat-icon>check_circle</mat-icon>
+      <span>Completadas: {{ getCompletedTasksCount() }}</span>
+    </div>
+
+    <div class="stat-item">
+      <mat-icon>event</mat-icon>
+      <span>Creada: {{ taskList.createdAt | date:'dd/MM/yyyy' }}</span>
+    </div>
+  </div>
+
+  <div class="filter-controls">
+    <mat-button-toggle-group [(ngModel)]="taskFilter" name="taskFilter">
+      <mat-button-toggle value="all">Todas</mat-button-toggle>
+      <mat-button-toggle value="pending">Pendientes</mat-button-toggle>
+      <mat-button-toggle value="completed">Completadas</mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+  <div class="task-list">
+    <!-- Utiliza el método getFilteredTasks() o filterTasks() -->
+    <mat-card *ngFor="let task of filterTasks()"
+        [ngClass]="{'completed-task': task.isCompleted}">
+      <mat-card-content>
+        <mat-checkbox
+          [checked]="task.isCompleted"
+          (change)="toggleTaskCompletion(task)"
+          color="primary">
+        </mat-checkbox>
+
+        <div class="task-details">
+          <h3 [ngClass]="{'completed-title': task.isCompleted}">{{ task.title }}</h3>
+          <p *ngIf="task.description" [ngClass]="{'completed-text': task.isCompleted}">
+            {{ task.description | slice:0:100 }}{{ task.description.length > 100 ? '...' : '' }}
+          </p>
+
+          <div class="task-meta">
+            <span *ngIf="task.dueDate">
+              <mat-icon>event</mat-icon> {{ task.dueDate | date:'dd/MM/yyyy' }}
+            </span>
+
+            <span *ngIf="task.completedAt">
+              <mat-icon>check_circle</mat-icon> {{ task.completedAt | date:'dd/MM/yyyy' }}
+            </span>
+
+            <span class="priority-badge"
+                  [ngClass]="'priority-' + task.priority">
+              {{ task.priority === 'low' ? 'Baja' : task.priority === 'medium' ? 'Media' : 'Alta' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button mat-icon-button (click)="goToTaskDetail(task._id)">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="no-tasks" *ngIf="filterTasks().length === 0">
+    <p>No hay tareas {{ taskFilter === 'pending' ? 'pendientes' :
+                        taskFilter === 'completed' ? 'completadas' : '' }}
+       en esta lista.</p>
+  </div>
+
+  <div class="actions-footer">
+    <button mat-raised-button color="primary" (click)="createTask()">
+      <mat-icon>add</mat-icon> Nueva tarea
+    </button>
+
+    <button mat-stroked-button color="accent" (click)="editTaskList()">
+      <mat-icon>edit</mat-icon> Editar lista
+    </button>
+
+    <button mat-stroked-button color="warn" (click)="deleteTaskList()">
+      <mat-icon>delete</mat-icon> Eliminar lista
+    </button>
+
+    <button mat-button (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon> Volver
+    </button>
+  </div>
+</div>
+
+<div *ngIf="loading" class="loading-spinner-container">
+  <mat-spinner diameter="40"></mat-spinner>
+</div>

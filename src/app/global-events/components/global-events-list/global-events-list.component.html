@@ -1,0 +1,231 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2>Eventos Globales</h2>
+        <div>
+          <button mat-stroked-button class="me-2" (click)="toggleShowInactive()">
+            {{ showInactive ? 'Ocultar inactivos' : 'Mostrar inactivos' }}
+          </button>
+          <button mat-raised-button color="primary" (click)="createGlobalEvent()" *ngIf="isAdmin">
+            <mat-icon>add</mat-icon> Nuevo evento
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div *ngIf="loading" class="d-flex justify-content-center my-5">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <div *ngIf="!loading && globalEvents.length === 0" class="text-center my-5">
+        <mat-icon style="font-size: 48px; height: 48px; width: 48px; color: #ccc;">event</mat-icon>
+        <p class="mt-3">No hay eventos globales disponibles</p>
+        <button mat-stroked-button color="primary" (click)="createGlobalEvent()" *ngIf="isAdmin">
+          Crear primer evento
+        </button>
+      </div>
+
+      <mat-tab-group *ngIf="!loading && globalEvents.length > 0">
+        <mat-tab label="Activos">
+          <div class="p-3">
+            <div class="row">
+              <div *ngFor="let event of getActiveEvents()" class="col-md-6 col-lg-4 mb-4">
+                <mat-card class="event-card active-event">
+                  <mat-card-header>
+                    <div mat-card-avatar class="event-avatar active">
+                      <mat-icon>event_available</mat-icon>
+                    </div>
+                    <mat-card-title>{{ event.title }}</mat-card-title>
+                    <mat-card-subtitle>En curso</mat-card-subtitle>
+                    <div class="event-actions" *ngIf="isAdmin">
+                      <button mat-icon-button [matMenuTriggerFor]="eventMenu">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                      <mat-menu #eventMenu="matMenu">
+                        <button mat-menu-item (click)="editGlobalEvent(event)">
+                          <mat-icon>edit</mat-icon>
+                          <span>Editar</span>
+                        </button>
+                        <button mat-menu-item (click)="deleteGlobalEvent(event)">
+                          <mat-icon>delete</mat-icon>
+                          <span>Eliminar</span>
+                        </button>
+                      </mat-menu>
+                    </div>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <p *ngIf="event.description">{{ event.description }}</p>
+                    <div class="event-dates">
+                      <div class="event-date">
+                        <mat-icon>event</mat-icon>
+                        <span>Inicio: {{ event.startDate | date:'fullDate' }}</span>
+                      </div>
+                      <div class="event-date">
+                        <mat-icon>event_busy</mat-icon>
+                        <span>Fin: {{ event.endDate | date:'fullDate' }}</span>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+              <div *ngIf="hasInactiveEvents()" class="col-12 text-center my-4">
+                <p>No hay eventos activos actualmente</p>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Próximos">
+          <div class="p-3">
+            <div class="row">
+              <div *ngFor="let event of getActiveEvents()" class="col-md-6 col-lg-4 mb-4">
+                <mat-card class="event-card upcoming-event">
+                  <mat-card-header>
+                    <div mat-card-avatar class="event-avatar upcoming">
+                      <mat-icon>schedule</mat-icon>
+                    </div>
+                    <mat-card-title>{{ event.title }}</mat-card-title>
+                    <mat-card-subtitle>Próximamente</mat-card-subtitle>
+                    <div class="event-actions" *ngIf="isAdmin">
+                      <button mat-icon-button [matMenuTriggerFor]="eventMenu">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                      <mat-menu #eventMenu="matMenu">
+                        <button mat-menu-item (click)="editGlobalEvent(event)">
+                          <mat-icon>edit</mat-icon>
+                          <span>Editar</span>
+                        </button>
+                        <button mat-menu-item (click)="deleteGlobalEvent(event)">
+                          <mat-icon>delete</mat-icon>
+                          <span>Eliminar</span>
+                        </button>
+                      </mat-menu>
+                    </div>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <p *ngIf="event.description">{{ event.description }}</p>
+                    <div class="event-dates">
+                      <div class="event-date">
+                        <mat-icon>event</mat-icon>
+                        <span>Inicio: {{ event.startDate | date:'fullDate' }}</span>
+                      </div>
+                      <div class="event-date">
+                        <mat-icon>event_busy</mat-icon>
+                        <span>Fin: {{ event.endDate | date:'fullDate' }}</span>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+              <div *ngIf="hasInactiveEvents()" class="col-12 text-center my-4">
+                <p>No hay eventos próximos programados</p>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Pasados">
+          <div class="p-3">
+            <div class="row">
+              <div *ngFor="let event of getActiveEvents()" class="col-md-6 col-lg-4 mb-4">
+                <mat-card class="event-card past-event">
+                  <mat-card-header>
+                    <div mat-card-avatar class="event-avatar past">
+                      <mat-icon>event_busy</mat-icon>
+                    </div>
+                    <mat-card-title>{{ event.title }}</mat-card-title>
+                    <mat-card-subtitle>Finalizado</mat-card-subtitle>
+                    <div class="event-actions" *ngIf="isAdmin">
+                      <button mat-icon-button [matMenuTriggerFor]="eventMenu">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                      <mat-menu #eventMenu="matMenu">
+                        <button mat-menu-item (click)="editGlobalEvent(event)">
+                          <mat-icon>edit</mat-icon>
+                          <span>Editar</span>
+                        </button>
+                        <button mat-menu-item (click)="deleteGlobalEvent(event)">
+                          <mat-icon>delete</mat-icon>
+                          <span>Eliminar</span>
+                        </button>
+                      </mat-menu>
+                    </div>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <p *ngIf="event.description">{{ event.description }}</p>
+                    <div class="event-dates">
+                      <div class="event-date">
+                        <mat-icon>event</mat-icon>
+                        <span>Inicio: {{ event.startDate | date:'fullDate' }}</span>
+                      </div>
+                      <div class="event-date">
+                        <mat-icon>event_busy</mat-icon>
+                        <span>Fin: {{ event.endDate | date:'fullDate' }}</span>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+              <div *ngIf="hasInactiveEvents()" class="col-12 text-center my-4">
+                <p>No hay eventos pasados para mostrar</p>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab label="Inactivos" *ngIf="showInactive">
+          <div class="p-3">
+            <div class="row">
+              <div *ngFor="let event of getInactiveEvents()" class="col-md-6 col-lg-4 mb-4">
+                <mat-card class="event-card inactive-event">
+                  <mat-card-header>
+                    <div mat-card-avatar class="event-avatar inactive">
+                      <mat-icon>event_busy</mat-icon>
+                    </div>
+                    <mat-card-title>{{ event.title }}</mat-card-title>
+                    <mat-card-subtitle>Inactivo</mat-card-subtitle>
+                    <div class="event-actions" *ngIf="isAdmin">
+                      <button mat-icon-button [matMenuTriggerFor]="eventMenu">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                      <mat-menu #eventMenu="matMenu">
+                        <button mat-menu-item (click)="editGlobalEvent(event)">
+                          <mat-icon>edit</mat-icon>
+                          <span>Editar</span>
+                        </button>
+                        <button mat-menu-item (click)="deleteGlobalEvent(event)">
+                          <mat-icon>delete</mat-icon>
+                          <span>Eliminar</span>
+                        </button>
+                      </mat-menu>
+                    </div>
+                  </mat-card-header>
+                  <mat-card-content>
+                    <p *ngIf="event.description">{{ event.description }}</p>
+                    <div class="event-dates">
+                      <div class="event-date">
+                        <mat-icon>event</mat-icon>
+                        <span>Inicio: {{ event.startDate | date:'fullDate' }}</span>
+                      </div>
+                      <div class="event-date">
+                        <mat-icon>event_busy</mat-icon>
+                        <span>Fin: {{ event.endDate | date:'fullDate' }}</span>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+              <div *ngIf="hasInactiveEvents()" class="col-12 text-center my-4">
+                <p>No hay eventos inactivos para mostrar</p>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

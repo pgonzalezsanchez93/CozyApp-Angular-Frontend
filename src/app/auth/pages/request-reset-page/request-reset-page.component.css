@@ -1,0 +1,237 @@
+.request-reset-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: var(--background-color, #f5f5f5);
+}
+
+.request-reset-card {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  background-color: var(--surface-color, #ffffff);
+  color: var(--text-primary, #333);
+}
+
+.request-reset-card .mat-mdc-card-title {
+  color: var(--text-primary, #333) !important;
+  font-weight: 600;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.instructions {
+  margin-bottom: 20px;
+  color: var(--text-secondary, #666);
+}
+
+.form-actions {
+  margin-top: 20px;
+}
+
+.additional-links {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.link {
+  color: var(--primary-color, #3f51b5);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.link:hover {
+  text-decoration: underline;
+  color: var(--accent-color, #ff4081);
+}
+
+.button-spinner {
+  margin: 0 auto;
+}
+
+.success-message {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.success-icon {
+  font-size: 64px;
+  height: 64px;
+  width: 64px;
+  color: var(--success-color, #4caf50);
+  margin-bottom: 16px;
+}
+
+.note {
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--text-secondary, #666);
+  margin-top: 10px;
+}
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.form-actions {
+  margin-top: 16px;
+}
+
+.success-message {
+  text-align: center;
+  padding: 20px;
+}
+
+.success-message mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+}
+
+.success-message h3 {
+  margin: 0 0 16px 0;
+  color: #4caf50;
+}
+
+.success-message p {
+  color: #666;
+  margin: 0;
+}
+
+
+.centered-actions {
+  justify-content: center;
+}
+
+.mat-mdc-form-field {
+  color: var(--text-primary, #333);
+}
+
+.mat-mdc-form-field-label {
+  color: var(--text-secondary, #666) !important;
+}
+
+.mat-mdc-input-element {
+  color: var(--text-primary, #333) !important;
+}
+
+.mat-mdc-form-field-outline {
+  color: var(--divider-color, #e0e0e0) !important;
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline-thick {
+  color: var(--primary-color, #3f51b5) !important;
+}
+
+.mat-mdc-form-field-error {
+  color: var(--error-color, #f44336);
+}
+
+.theme-dark .request-reset-container {
+  background-color: var(--background-color);
+}
+
+.theme-dark .request-reset-card {
+  background-color: var(--surface-color);
+  border: 1px solid var(--divider-color);
+}
+
+.theme-dark .request-reset-card .mat-mdc-card-title {
+  color: var(--text-primary) !important;
+}
+
+.theme-dark .instructions,
+.theme-dark .note {
+  color: var(--text-secondary);
+}
+
+.theme-cozy .request-reset-container {
+  background-color: var(--cozy-light-bg);
+}
+
+.theme-cozy .request-reset-card {
+  background-color: white;
+  border: 1px solid rgba(227, 128, 84, 0.1);
+}
+
+.theme-cozy .request-reset-card .mat-mdc-card-title {
+  color: var(--cozy-light-text) !important;
+}
+
+.theme-cozy .instructions,
+.theme-cozy .note {
+  color: rgba(4, 6, 6, 0.7);
+}
+
+.theme-cozy .link {
+  color: var(--cozy-primary);
+}
+
+.theme-cozy .link:hover {
+  color: var(--cozy-accent);
+}
+
+.theme-cozy .success-icon {
+  color: var(--cozy-success);
+}
+
+.theme-nature .request-reset-container {
+  background-color: var(--background-color);
+}
+
+.theme-nature .request-reset-card {
+  background-color: var(--surface-color);
+  border: 1px solid var(--divider-color);
+}
+
+.theme-nature .link {
+  color: var(--primary-color);
+}
+
+.theme-nature .link:hover {
+  color: var(--accent-color);
+}
+
+.theme-ocean .request-reset-container {
+  background-color: var(--background-color);
+}
+
+.theme-ocean .request-reset-card {
+  background-color: var(--surface-color);
+  border: 1px solid var(--divider-color);
+}
+
+.theme-ocean .link {
+  color: var(--primary-color);
+}
+
+.theme-ocean .link:hover {
+  color: var(--accent-color);
+}
+
+@media (max-width: 576px) {
+  .request-reset-container {
+    padding: 10px;
+  }
+  
+  .request-reset-card {
+    max-width: 100%;
+  }
+}

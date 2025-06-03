@@ -1,0 +1,157 @@
+:root {
+  --primary-color: #3f51b5;
+  --accent-color: #ff4081;
+  --warn-color: #f44336;
+  --background-color: #fafafa;
+  --surface-color: #ffffff;
+  --text-primary: #212121;
+  --text-secondary: #757575;
+  --text-disabled: #bdbdbd;
+  --divider-color: #e0e0e0;
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+  --info-color: #2196f3;
+  --error-color: #f44336;
+}
+
+.theme-default {
+  background-color: var(--background-color);
+  color: var(--text-primary);
+}
+
+.theme-default .mat-toolbar {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+.theme-default .mat-toolbar * {
+  color: white !important;
+}
+
+.theme-default .mat-card {
+  background-color: var(--surface-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.theme-default .mat-card * {
+  color: var(--text-primary) !important;
+}
+
+.theme-default .mat-sidenav {
+  background-color: var(--surface-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.theme-default .mat-list-item {
+  color: var(--text-primary) !important;
+}
+
+.theme-default .mat-list-item:hover {
+  background-color: rgba(63, 81, 181, 0.1) !important;
+}
+
+.theme-default .mat-raised-button.mat-primary {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+.theme-default .mat-raised-button.mat-primary * {
+  color: white !important;
+}
+
+.theme-default .mat-raised-button.mat-accent {
+  background-color: var(--accent-color) !important;
+  color: white !important;
+}
+
+.theme-default .mat-raised-button.mat-accent * {
+  color: white !important;
+}
+
+.theme-default .mat-raised-button.mat-warn {
+  background-color: var(--warn-color) !important;
+  color: white !important;
+}
+
+.theme-default .mat-raised-button.mat-warn * {
+  color: white !important;
+}
+
+.theme-default .mat-button.mat-primary {
+  color: var(--primary-color) !important;
+}
+
+.theme-default .mat-button.mat-accent {
+  color: var(--accent-color) !important;
+}
+
+.theme-default .mat-button.mat-warn {
+  color: var(--warn-color) !important;
+}
+
+.theme-default .text-primary { 
+  color: var(--primary-color) !important; 
+}
+
+.theme-default .text-success { 
+  color: var(--success-color) !important; 
+}
+
+.theme-default .text-warning { 
+  color: var(--warning-color) !important; 
+}
+
+.theme-default .text-danger { 
+  color: var(--error-color) !important; 
+}
+
+.theme-default .text-info { 
+  color: var(--info-color) !important; 
+}
+
+.theme-default .task-item {
+  border-left-color: var(--primary-color);
+  background-color: var(--surface-color);
+}
+
+.theme-default .task-item.completed {
+  border-left-color: var(--success-color);
+  background-color: rgba(76, 175, 80, 0.05);
+}
+
+.theme-default .task-item.overdue {
+  border-left-color: var(--error-color);
+  background-color: rgba(244, 67, 54, 0.05);
+}
+
+.theme-default .priority-high { 
+  background-color: var(--error-color) !important; 
+}
+
+.theme-default .priority-medium { 
+  background-color: var(--warning-color) !important; 
+}
+
+.theme-default .priority-low { 
+  background-color: var(--success-color) !important; 
+}
+
+.theme-default .mat-form-field-label {
+  color: var(--text-secondary) !important;
+}
+
+.theme-default .mat-input-element {
+  color: var(--text-primary) !important;
+}
+
+.theme-default .mat-select-value {
+  color: var(--text-primary) !important;
+}
+
+.theme-default .mat-option {
+  color: var(--text-primary) !important;
+}
+
+.theme-default .mat-option:hover {
+  background-color: rgba(63, 81, 181, 0.1) !important;
+}

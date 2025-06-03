@@ -1,0 +1,22 @@
+<div class="dashboard-container">
+  <app-dashboard-header (toggleSidenav)="sidenav.toggle()"></app-dashboard-header>
+
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav
+             mode="over"
+             [opened]="false"
+             [fixedInViewport]="true"
+             [fixedTopGap]="64"
+             [autoFocus]="false"
+             class="sidenav"
+             (backdropClick)="closeSidenav()">
+      <app-dashboard-sidenav (sidenavClose)="closeSidenav()"></app-dashboard-sidenav>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="sidenav-content">
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

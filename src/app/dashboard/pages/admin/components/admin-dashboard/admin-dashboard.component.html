@@ -1,0 +1,124 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2>Dashboard de Administración</h2>
+        <button mat-raised-button color="primary" (click)="loadUserStats()" [disabled]="isLoading">
+          <mat-icon>refresh</mat-icon> Actualizar Datos
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="d-flex justify-content-center my-5">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && userStats">
+    <div class="row mb-4">
+      <div class="col-md-6 col-lg-3 mb-3">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-icon-container">
+              <mat-icon class="stat-icon">people</mat-icon>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-title">Total de Usuarios</h3>
+              <p class="stat-value">{{ userStats.totalUsers }}</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="col-md-6 col-lg-3 mb-3">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-icon-container status-active">
+              <mat-icon class="stat-icon">check_circle</mat-icon>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-title">Usuarios Activos</h3>
+              <p class="stat-value">{{ userStats.activeUsers }} <span class="stat-percentage">({{ getActivePercentage() }}%)</span></p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="col-md-6 col-lg-3 mb-3">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-icon-container status-admin">
+              <mat-icon class="stat-icon">admin_panel_settings</mat-icon>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-title">Administradores</h3>
+              <p class="stat-value">{{ userStats.adminUsers }} <span class="stat-percentage">({{ getAdminPercentage() }}%)</span></p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="col-md-6 col-lg-3 mb-3">
+        <mat-card class="stat-card">
+          <mat-card-content>
+            <div class="stat-icon-container status-new">
+              <mat-icon class="stat-icon">person_add</mat-icon>
+            </div>
+            <div class="stat-content">
+              <h3 class="stat-title">Nuevos Usuarios (30d)</h3>
+              <p class="stat-value">{{ userStats.newUsers }} <span class="stat-percentage">({{ getNewUsersPercentage() }}%)</span></p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Estado de Usuarios</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="chart-container">
+              <mat-progress-bar mode="determinate" [value]="getActivePercentage()" color="primary"></mat-progress-bar>
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <div class="legend-color bg-active"></div>
+                  <span>Activos: {{ userStats.activeUsers }}</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color bg-inactive"></div>
+                  <span>Inactivos: {{ userStats.inactiveUsers }}</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Actividad Reciente</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="chart-container">
+              <mat-progress-bar mode="determinate" [value]="getRecentActivePercentage()" color="accent"></mat-progress-bar>
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <div class="legend-color bg-recent"></div>
+                  <span>Activos (7d): {{ userStats.recentActiveUsers }}</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color bg-not-recent"></div>
+                  <span>Inactivos (7d): {{ userStats.totalUsers - userStats.recentActiveUsers }}</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

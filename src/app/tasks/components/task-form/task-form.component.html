@@ -1,0 +1,60 @@
+<div class="form-container">
+  <h2>{{formTitle}}</h2>
+
+  <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="w-100 mb-3">
+      <mat-label>Título</mat-label>
+      <input matInput formControlName="title" placeholder="Ingrese el título de la tarea">
+      <mat-error *ngIf="taskForm.get('title')?.errors?.['required']">
+        El título es obligatorio
+      </mat-error>
+      <mat-error *ngIf="taskForm.get('title')?.errors?.['minlength']">
+        El título debe tener al menos 3 caracteres
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100 mb-3">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput formControlName="description" placeholder="Detalles de la tarea" rows="3"></textarea>
+    </mat-form-field>
+
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha de vencimiento</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dueDate">
+          <mat-hint>DD/MM/YYYY</mat-hint>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Prioridad</mat-label>
+          <mat-select formControlName="priority">
+            <mat-option *ngFor="let priority of priorities" [value]="priority.value">
+              {{priority.label}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-form-field appearance="outline" class="w-100 mb-3">
+      <mat-label>Lista</mat-label>
+      <mat-select formControlName="listId">
+        <mat-option [value]="''">Sin lista</mat-option>
+        <mat-option *ngFor="let list of taskLists" [value]="list._id" [style.color]="list.color">
+          <mat-icon>{{list.icon || 'list'}}</mat-icon> {{list.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="form-actions">
+      <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="taskForm.invalid">
+        {{isEditMode ? 'Actualizar' : 'Crear'}}
+      </button>
+    </div>
+  </form>
+</div>

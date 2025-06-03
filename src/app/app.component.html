@@ -1,0 +1,18 @@
+<div *ngIf="!finishedAuthCheck()" class="global-loading">
+  <div class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Verificando autenticación...</p>
+
+    <button
+      mat-button
+      color="warn"
+      class="emergency-button"
+      (click)="forceLogin()">
+      Continuar sin verificar
+    </button>
+  </div>
+</div>
+
+<div *ngIf="finishedAuthCheck()">
+  <router-outlet></router-outlet>
+</div>

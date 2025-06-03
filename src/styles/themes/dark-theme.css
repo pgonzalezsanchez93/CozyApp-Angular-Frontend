@@ -1,0 +1,142 @@
+.theme-dark {
+  --primary-color: #bb86fc;
+  --accent-color: #03dac6;
+  --warn-color: #cf6679;
+  --background-color: #121212;
+  --surface-color: #1e1e1e;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --text-disabled: #666666;
+  --divider-color: #333333;
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+  --info-color: #2196f3;
+  --error-color: #cf6679;
+
+  background-color: var(--background-color);
+  color: var(--text-primary);
+}
+
+.theme-dark .mat-toolbar {
+  background-color: var(--surface-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.theme-dark .mat-toolbar * {
+  color: var(--text-primary) !important;
+}
+
+.theme-dark .mat-card {
+  background-color: var(--surface-color) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--divider-color);
+}
+
+.theme-dark .mat-card * {
+  color: var(--text-primary) !important;
+}
+
+.theme-dark .mat-sidenav {
+  background-color: var(--surface-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.theme-dark .mat-list-item {
+  color: var(--text-primary) !important;
+}
+
+.theme-dark .mat-list-item:hover {
+  background-color: rgba(187, 134, 252, 0.1) !important;
+}
+
+.theme-dark .mat-raised-button.mat-primary {
+  background-color: var(--primary-color) !important;
+  color: #000000 !important;
+}
+
+.theme-dark .mat-raised-button.mat-primary * {
+  color: #000000 !important;
+}
+
+.theme-dark .mat-raised-button.mat-accent {
+  background-color: var(--accent-color) !important;
+  color: #000000 !important;
+}
+
+.theme-dark .mat-raised-button.mat-accent * {
+  color: #000000 !important;
+}
+
+.theme-dark .mat-raised-button.mat-warn {
+  background-color: var(--warn-color) !important;
+  color: white !important;
+}
+
+.theme-dark .mat-raised-button.mat-warn * {
+  color: white !important;
+}
+
+.theme-dark .text-primary { 
+  color: var(--primary-color) !important; 
+}
+
+.theme-dark .text-success { 
+  color: var(--success-color) !important; 
+}
+
+.theme-dark .text-warning { 
+  color: var(--warning-color) !important; 
+}
+
+.theme-dark .text-danger { 
+  color: var(--error-color) !important; 
+}
+
+.theme-dark .text-info { 
+  color: var(--info-color) !important; 
+}
+
+.theme-dark .task-item {
+  border-left-color: var(--primary-color);
+  background-color: var(--surface-color);
+  color: var(--text-primary);
+}
+
+.theme-dark .task-item.completed {
+  border-left-color: var(--success-color);
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+.theme-dark .task-item.overdue {
+  border-left-color: var(--error-color);
+  background-color: rgba(207, 102, 121, 0.1);
+}
+
+.theme-dark .mat-input-element {
+  color: var(--text-primary) !important;
+}
+
+.theme-dark .mat-form-field-label {
+  color: var(--text-secondary) !important;
+}
+
+.theme-dark .mat-select-value {
+  color: var(--text-primary) !important;
+}
+
+.theme-dark .mat-option {
+  background-color: var(--surface-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.theme-dark .priority-high { 
+  background-color: var(--error-color) !important; 
+}
+
+.theme-dark .priority-medium { 
+  background-color: var(--warning-color) !important; 
+}
+
+.theme-dark .priority-low { 
+  background-color: var(--success-color) !important; 
+}

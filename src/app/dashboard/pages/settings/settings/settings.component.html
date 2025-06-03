@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="page-header">
+    <h1 class="page-title">Configuración</h1>
+    <p class="page-subtitle">Personaliza tu experiencia en la aplicación</p>
+  </div>
+
+  <form [formGroup]="settingsForm" (ngSubmit)="saveSettings()">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Apariencia</mat-card-title>
+        <mat-card-subtitle>Personaliza el tema visual de la aplicación</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="theme-selector">
+          <h4>Selecciona un tema</h4>
+          <div class="theme-grid">
+            <div 
+              *ngFor="let theme of availableThemes" 
+              class="theme-option"
+              [class.selected]="currentTheme === theme.id"
+              (click)="onThemeChange(theme.id)"
+            >
+              <div 
+                class="theme-preview" 
+                [style.background-color]="theme.primaryColor"
+              ></div>
+              <div class="theme-info">
+                <span class="theme-name">{{ theme.name }}</span>
+                <span class="theme-description">{{ theme.description }}</span>
+              </div>
+              <mat-icon *ngIf="currentTheme === theme.id" class="selected-icon">check_circle</mat-icon>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="form-actions">
+      <button 
+        mat-raised-button 
+        color="primary" 
+        type="submit"
+        [disabled]="isLoading || settingsForm.invalid"
+      >
+        <mat-icon *ngIf="isLoading">hourglass_empty</mat-icon>
+        <span>{{ isLoading ? 'Guardando...' : 'Guardar configuración' }}</span>
+      </button>
+    </div>
+  </form>
+</div>

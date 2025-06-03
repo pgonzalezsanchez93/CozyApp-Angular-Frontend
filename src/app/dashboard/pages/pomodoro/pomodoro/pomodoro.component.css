@@ -1,0 +1,272 @@
+.theme-default .setting-row {
+  margin-bottom: 20px;
+}
+
+.theme-default mat-form-field {
+  width: 100%;
+}
+
+.theme-default h4 {
+  color: #333333;
+  font-weight: 600;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+}
+
+.theme-default .text-muted {
+  color: #666666 !important;
+}
+
+.theme-default ::ng-deep .mat-dialog-title {
+  color: #333333;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 0;
+}
+
+.theme-default .setting-row > div > div > strong {
+  color: #333333;
+  font-weight: 600;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.theme-default mat-divider {
+  border-color: #e0e0e0;
+}
+
+/* ===== TEMA OSCURO ===== */
+.theme-dark .setting-row {
+  margin-bottom: 20px;
+}
+
+.theme-dark mat-form-field {
+  width: 100%;
+}
+
+.theme-dark h4 {
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+}
+
+.theme-dark .text-muted {
+  color: #b3b3b3 !important;
+}
+
+.theme-dark ::ng-deep .mat-dialog-title {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 0;
+}
+
+.theme-dark .setting-row > div > div > strong {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.theme-dark mat-divider {
+  border-color: #333333;
+}
+
+.theme-dark ::ng-deep .mat-dialog-container {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
+
+/* ===== TEMA CLARO ===== */
+.theme-light .setting-row {
+  margin-bottom: 20px;
+}
+
+.theme-light mat-form-field {
+  width: 100%;
+}
+
+.theme-light h4 {
+  color: #000000;
+  font-weight: 600;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+}
+
+.theme-light .text-muted {
+  color: #5f6368 !important;
+}
+
+.theme-light ::ng-deep .mat-dialog-title {
+  color: #000000;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 0;
+}
+
+.theme-light .setting-row > div > div > strong {
+  color: #000000;
+  font-weight: 600;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.theme-light mat-divider {
+  border-color: #dadce0;
+}
+
+.theme-light ::ng-deep .mat-dialog-container {
+  background-color: #f8f9fa;
+  color: #000000;
+}
+
+/* ===== TEMA NATURALEZA ===== */
+.theme-nature .setting-row {
+  margin-bottom: 20px;
+}
+
+.theme-nature mat-form-field {
+  width: 100%;
+}
+
+.theme-nature h4 {
+  color: #1b5e20;
+  font-weight: 600;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+}
+
+.theme-nature .text-muted {
+  color: #388e3c !important;
+}
+
+.theme-nature ::ng-deep .mat-dialog-title {
+  color: #1b5e20;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 0;
+}
+
+.theme-nature .setting-row > div > div > strong {
+  color: #1b5e20;
+  font-weight: 600;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.theme-nature mat-divider {
+  border-color: #c8e6c9;
+}
+
+.theme-nature ::ng-deep .mat-dialog-container {
+  background-color: #ffffff;
+  color: #1b5e20;
+}
+
+/* ===== TEMA OCÉANO ===== */
+.theme-ocean .setting-row {
+  margin-bottom: 20px;
+}
+
+.theme-ocean mat-form-field {
+  width: 100%;
+}
+
+.theme-ocean h4 {
+  color: #01579b;
+  font-weight: 600;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+}
+
+.theme-ocean .text-muted {
+  color: #0288d1 !important;
+}
+
+.theme-ocean ::ng-deep .mat-dialog-title {
+  color: #01579b;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 0;
+}
+
+.theme-ocean .setting-row > div > div > strong {
+  color: #01579b;
+  font-weight: 600;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.theme-ocean mat-divider {
+  border-color: #b3e5fc;
+}
+
+.theme-ocean ::ng-deep .mat-dialog-container {
+  background-color: #ffffff;
+  color: #01579b;
+}
+
+/* ===== ELEMENTOS COMUNES ===== */
+.small {
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.gap-2 {
+  gap: 8px;
+}
+
+.my-4 {
+  margin: 24px 0;
+}
+
+.mb-3 {
+  margin-bottom: 16px;
+}
+
+.mb-0 {
+  margin-bottom: 0;
+}
+
+.me-auto {
+  margin-right: auto;
+}
+
+mat-dialog-content {
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 20px 24px;
+}
+
+mat-dialog-actions {
+  padding: 16px 24px;
+  margin: 0;
+}
+
+mat-slide-toggle {
+  margin-left: 8px;
+}
+
+::ng-deep .mat-dialog-container {
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}

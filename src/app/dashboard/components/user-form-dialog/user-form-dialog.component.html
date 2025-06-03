@@ -1,0 +1,55 @@
+<h2 mat-dialog-title>{{title}}</h2>
+<div mat-dialog-content>
+  <form [formGroup]="userForm">
+    <mat-form-field appearance="outline" class="w-100 mb-3">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="name" placeholder="Ingrese el nombre">
+      <mat-error *ngIf="userForm.get('name')?.hasError('required')">
+        El nombre es requerido
+      </mat-error>
+      <mat-error *ngIf="userForm.get('name')?.hasError('minlength')">
+        El nombre debe tener al menos 3 caracteres
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100 mb-3">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" placeholder="Ingrese el email" type="email">
+      <mat-error *ngIf="userForm.get('email')?.hasError('required')">
+        El email es requerido
+      </mat-error>
+      <mat-error *ngIf="userForm.get('email')?.hasError('email')">
+        Ingrese un email válido
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100 mb-3" *ngIf="!isEditMode">
+      <mat-label>Contraseña</mat-label>
+      <input matInput formControlName="password" placeholder="Ingrese la contraseña" type="password">
+      <mat-error *ngIf="userForm.get('password')?.hasError('required')">
+        La contraseña es requerida
+      </mat-error>
+      <mat-error *ngIf="userForm.get('password')?.hasError('minlength')">
+        La contraseña debe tener al menos 6 caracteres
+      </mat-error>
+    </mat-form-field>
+
+    <div class="mb-3">
+      <mat-slide-toggle formControlName="isActive" color="primary">
+        Usuario activo
+      </mat-slide-toggle>
+    </div>
+
+    <div class="mb-3">
+      <mat-slide-toggle formControlName="isAdmin" color="primary">
+        Permisos de administrador
+      </mat-slide-toggle>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="userForm.invalid">
+    {{isEditMode ? 'Actualizar' : 'Crear'}}
+  </button>
+</div>

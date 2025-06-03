@@ -1,0 +1,42 @@
+<div class="auth-container">
+  <mat-card class="auth-card">
+    <mat-card-header>
+      <mat-card-title>Recuperar Contraseña</mat-card-title>
+      <mat-card-subtitle>Ingresa tu email para recibir un enlace de restablecimiento</mat-card-subtitle>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form [formGroup]="requestForm" (ngSubmit)="onSubmit()" *ngIf="!requestSent">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" placeholder="tu@email.com">
+          <mat-error *ngIf="requestForm.get('email')?.hasError('required')">
+            El email es obligatorio
+          </mat-error>
+          <mat-error *ngIf="requestForm.get('email')?.hasError('email')">
+            Ingresa un email válido
+          </mat-error>
+        </mat-form-field>
+        
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" 
+                  [disabled]="requestForm.invalid || isLoading"
+                  class="full-width">
+            <mat-spinner diameter="20" *ngIf="isLoading"></mat-spinner>
+            {{ isLoading ? 'Enviando...' : 'Enviar enlace' }}
+          </button>
+        </div>
+      </form>
+      
+      <div class="success-message" *ngIf="requestSent">
+        <mat-icon color="accent">check_circle</mat-icon>
+        <h3>Solicitud enviada</h3>
+        <p>Si el correo existe en nuestra base de datos, recibirás un enlace para restablecer tu contraseña.</p>
+      </div>
+    </mat-card-content>
+    
+    <mat-card-actions class="centered-actions">
+      <a mat-button routerLink="/auth/login">Volver al login</a>
+    </mat-card-actions>
+  </mat-card>
+</div>

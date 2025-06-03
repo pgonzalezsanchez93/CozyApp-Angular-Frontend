@@ -1,0 +1,75 @@
+<form class="login100-form"
+      [formGroup]="loginForm"
+      (ngSubmit)="onLogin()"
+      autocomplete="off">
+
+    <div class="login100-form-title p-b-49">
+        <h2>Login</h2>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput
+               type="email"
+               placeholder="Ingrese su correo"
+               formControlName="email">
+        <mat-icon matPrefix>email</mat-icon>
+        <mat-error *ngIf="loginForm.get('email')?.errors?.['required']">
+            El correo es obligatorio
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('email')?.errors?.['email']">
+            El correo no tiene formato válido
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Contraseña</mat-label>
+        <input matInput
+               [type]="showPassword ? 'text' : 'password'"
+               placeholder="Ingrese su contraseña"
+               formControlName="password">
+        <mat-icon matPrefix
+                  (click)="togglePasswordVisibility()"
+                  class="password-toggle">
+            {{ showPassword ? 'visibility' : 'visibility_off' }}
+        </mat-icon>
+        <mat-error *ngIf="loginForm.get('password')?.errors?.['required']">
+            La contraseña es obligatoria
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('password')?.errors?.['minlength'] && !loginForm.get('password')?.errors?.['required']">
+            La contraseña debe tener al menos 8 caracteres
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('password')?.errors?.['pattern'] && !loginForm.get('password')?.errors?.['minlength'] && !loginForm.get('password')?.errors?.['required']">
+            La contraseña debe contener al menos una letra mayúscula, una minúscula y un número
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('password')?.errors?.['specialChar'] && !loginForm.get('password')?.errors?.['pattern'] && !loginForm.get('password')?.errors?.['minlength'] && !loginForm.get('password')?.errors?.['required']">
+            La contraseña debe contener al menos un carácter especial (!#$%^&*)
+        </mat-error>
+    </mat-form-field>
+
+    <div class="button-container">
+        <button mat-raised-button
+                color="primary"
+                type="submit"
+                class="login-button"
+                [disabled]="loginForm.invalid || isLoading">
+            <mat-icon *ngIf="isLoading">refresh</mat-icon>
+            {{ isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+        </button>
+    </div>
+    <div class="auth-links" style="text-align: center; margin-top: 16px;">
+      <a mat-button routerLink="/auth/request-reset">¿Olvidaste tu contraseña?</a>
+    </div>
+
+    <div class="register-link">
+        <p class="txt1">
+            ¿No tienes cuenta?
+        </p>
+        <a mat-button
+           routerLink="/auth/register"
+           color="accent"
+           class="register-btn">
+            Crear una aquí
+        </a>
+    </div>
+</form>

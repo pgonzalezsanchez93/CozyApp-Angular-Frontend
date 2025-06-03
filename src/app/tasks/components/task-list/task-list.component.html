@@ -1,0 +1,371 @@
+<div class="task-list-container">
+
+  <div class="task-list-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <mat-icon *ngIf="selectedList">{{ selectedList.icon }}</mat-icon>
+        <mat-icon *ngIf="!selectedList">assignment</mat-icon>
+        {{ selectedList ? selectedList.name : pageTitle }}
+      </h1>
+      <p class="page-subtitle" *ngIf="selectedList && selectedList.description">
+        {{ selectedList.description }}
+      </p>
+    </div>
+    <div class="header-actions">
+      <button mat-fab color="primary" (click)="openTaskDialog()" matTooltip="Crear nueva tarea">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <mat-card class="filters-card">
+    <mat-card-content>
+
+      <div class="search-section">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar tareas...</mat-label>
+          <input matInput
+                 [(ngModel)]="searchTerm"
+                 (input)="applyFilters()"
+                 placeholder="Buscar por título o descripción">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="filters-row">
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Estado</mat-label>
+          <mat-select [(value)]="statusFilter" (selectionChange)="applyFilters()">
+            <mat-option value="all">Todas</mat-option>
+            <mat-option value="pending">Pendientes</mat-option>
+            <mat-option value="in_progress">En progreso</mat-option>
+            <mat-option value="completed">Completadas</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Prioridad</mat-label>
+          <mat-select [(value)]="priorityFilter" (selectionChange)="applyFilters()">
+            <mat-option value="all">Todas</mat-option>
+            <mat-option value="high">Alta</mat-option>
+            <mat-option value="medium">Media</mat-option>
+            <mat-option value="low">Baja</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field" *ngIf="!selectedListId">
+          <mat-label>Lista</mat-label>
+          <mat-select [(value)]="listFilter" (selectionChange)="applyFilters()">
+            <mat-option value="all">Todas las listas</mat-option>
+            <mat-option value="none">Sin lista</mat-option>
+            <mat-option *ngFor="let list of taskLists" [value]="list._id">
+              <div class="list-option">
+                <mat-icon [style.color]="list.color">{{ list.icon }}</mat-icon>
+                {{ list.name }}
+              </div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Fecha</mat-label>
+          <mat-select [(value)]="dateFilter" (selectionChange)="applyFilters()">
+            <mat-option value="all">Todas</mat-option>
+            <mat-option value="today">Hoy</mat-option>
+            <mat-option value="tomorrow">Mañana</mat-option>
+            <mat-option value="this_week">Esta semana</mat-option>
+            <mat-option value="overdue">Vencidas</mat-option>
+            <mat-option value="no_date">Sin fecha</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="view-toggle">
+          <mat-button-toggle-group [(value)]="viewMode" (change)="onViewModeChange()">
+            <mat-button-toggle value="list" matTooltip="Vista de lista">
+              <mat-icon>view_list</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle value="grid" matTooltip="Vista de cuadrícula">
+              <mat-icon>view_module</mat-icon>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+
+        <button mat-stroked-button
+                (click)="clearFilters()"
+                *ngIf="hasActiveFilters()"
+                class="clear-filters-btn">
+          <mat-icon>clear</mat-icon>
+          Limpiar filtros
+        </button>
+      </div>
+
+      <div class="filter-summary" *ngIf="hasActiveFilters()">
+        <span class="summary-text">
+          Mostrando {{ filteredTasks.length }} de {{ tasks.length }} tareas
+        </span>
+        <div class="active-filters">
+          <mat-chip *ngIf="searchTerm" removable (removed)="searchTerm = ''; applyFilters()">
+            Búsqueda: "{{ searchTerm }}"
+          </mat-chip>
+          <mat-chip *ngIf="statusFilter !== 'all'" removable (removed)="statusFilter = 'all'; applyFilters()">
+            Estado: {{ getStatusLabel(statusFilter) }}
+          </mat-chip>
+          <mat-chip *ngIf="priorityFilter !== 'all'" removable (removed)="priorityFilter = 'all'; applyFilters()">
+            Prioridad: {{ getPriorityLabel(priorityFilter) }}
+          </mat-chip>
+          <mat-chip *ngIf="listFilter !== 'all' && !selectedListId" removable (removed)="listFilter = 'all'; applyFilters()">
+            Lista: {{ listFilter === 'none' ? 'Sin lista' : getListName(listFilter) }}
+          </mat-chip>
+          <mat-chip *ngIf="dateFilter !== 'all'" removable (removed)="dateFilter = 'all'; applyFilters()">
+            Fecha: {{ getDateFilterLabel(dateFilter) }}
+          </mat-chip>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="task-stats" *ngIf="filteredTasks.length > 0">
+    <mat-card class="stat-item">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon pending">schedule</mat-icon>
+          <div class="stat-info">
+            <span class="stat-number">{{ getPendingCount() }}</span>
+            <span class="stat-label">Pendientes</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-item">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon completed">check_circle</mat-icon>
+          <div class="stat-info">
+            <span class="stat-number">{{ getCompletedCount() }}</span>
+            <span class="stat-label">Completadas</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-item" *ngIf="getOverdueCount() > 0">
+      <mat-card-content>
+        <div class="stat-content">
+          <mat-icon class="stat-icon overdue">warning</mat-icon>
+          <div class="stat-info">
+            <span class="stat-number">{{ getOverdueCount() }}</span>
+            <span class="stat-label">Vencidas</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Cargando tareas...</p>
+  </div>
+
+  <div class="tasks-content" *ngIf="!loading">
+
+    <div class="empty-state" *ngIf="filteredTasks.length === 0 && tasks.length === 0">
+      <mat-icon>assignment</mat-icon>
+      <h3>No hay tareas aún</h3>
+      <p>Comienza creando tu primera tarea para organizar tu día</p>
+      <button mat-raised-button color="primary" (click)="openTaskDialog()">
+        <mat-icon>add</mat-icon>
+        Crear primera tarea
+      </button>
+    </div>
+
+
+    <div class="empty-state" *ngIf="filteredTasks.length === 0 && tasks.length > 0">
+      <mat-icon>search_off</mat-icon>
+      <h3>No se encontraron tareas</h3>
+      <p>Intenta ajustar los filtros para ver más resultados</p>
+      <button mat-stroked-button (click)="clearFilters()">
+        <mat-icon>clear</mat-icon>
+        Limpiar filtros
+      </button>
+    </div>
+
+    <div class="tasks-list" *ngIf="filteredTasks.length > 0 && viewMode === 'list'">
+      <div class="task-item"
+           *ngFor="let task of filteredTasks; trackBy: trackByTaskId"
+           [ngClass]="{
+             'completed-task': task.status === 'completed',
+             'overdue-task': isOverdue(task),
+             'high-priority': task.priority === 'high'
+           }">
+
+        <div class="task-indicator" [style.background-color]="getTaskListColor(task)"></div>
+
+        <div class="task-content">
+
+          <div class="task-header">
+            <div class="task-title-section">
+              <button mat-icon-button
+                      (click)="toggleTaskCompletion(task)"
+                      class="completion-btn"
+                      [matTooltip]="task.status === 'completed' ? 'Marcar como pendiente' : 'Marcar como completada'">
+                <mat-icon [ngClass]="{
+                  'completed-icon': task.status === 'completed',
+                  'pending-icon': task.status !== 'completed'
+                }">
+                  {{ task.status === 'completed' ? 'check_circle' : 'radio_button_unchecked' }}
+                </mat-icon>
+              </button>
+              <h3 class="task-title" [ngClass]="{'completed-title': task.status === 'completed'}">
+                {{ task.title }}
+              </h3>
+            </div>
+
+            <div class="task-actions">
+
+              <mat-chip [ngClass]="'priority-' + task.priority" class="priority-chip">
+                {{ getPriorityLabel(task.priority) }}
+              </mat-chip>
+
+              <button mat-icon-button [matMenuTriggerFor]="taskMenu" class="task-menu-btn">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #taskMenu="matMenu">
+                <button mat-menu-item (click)="openTaskDialog(task)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Editar</span>
+                </button>
+                <button mat-menu-item (click)="duplicateTask(task)">
+                  <mat-icon>content_copy</mat-icon>
+                  <span>Duplicar</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="deleteTask(task)" class="delete-option">
+                  <mat-icon>delete</mat-icon>
+                  <span>Eliminar</span>
+                </button>
+              </mat-menu>
+            </div>
+          </div>
+
+          <p class="task-description" *ngIf="task.description">
+            {{ task.description }}
+          </p>
+
+          <div class="task-meta">
+            <div class="meta-item" *ngIf="task.dueDate">
+              <mat-icon>schedule</mat-icon>
+              <span [ngClass]="{'overdue-date': isOverdue(task)}">
+                {{ formatDueDate(task.dueDate) }}
+              </span>
+            </div>
+
+            <div class="meta-item" *ngIf="task.listId">
+              <mat-icon [style.color]="getTaskListColor(task)">{{ getTaskListIcon(task) }}</mat-icon>
+              <span>{{ getTaskListName(task) }}</span>
+            </div>
+
+            <div class="meta-item">
+              <mat-icon>{{ getStatusIcon(task.status) }}</mat-icon>
+              <span>{{ getStatusLabel(task.status) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="tasks-grid" *ngIf="filteredTasks.length > 0 && viewMode === 'grid'">
+      <mat-card class="task-card"
+                *ngFor="let task of filteredTasks; trackBy: trackByTaskId"
+                [ngClass]="{
+                  'completed-card': task.status === 'completed',
+                  'overdue-card': isOverdue(task),
+                  'high-priority-card': task.priority === 'high'
+                }">
+        <mat-card-header>
+          <div class="card-header-content">
+            <button mat-icon-button
+                    (click)="toggleTaskCompletion(task)"
+                    class="card-completion-btn">
+              <mat-icon [ngClass]="{
+                'completed-icon': task.status === 'completed',
+                'pending-icon': task.status !== 'completed'
+              }">
+                {{ task.status === 'completed' ? 'check_circle' : 'radio_button_unchecked' }}
+              </mat-icon>
+            </button>
+            <button mat-icon-button [matMenuTriggerFor]="cardMenu" class="card-menu-btn">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #cardMenu="matMenu">
+              <button mat-menu-item (click)="openTaskDialog(task)">
+                <mat-icon>edit</mat-icon>
+                <span>Editar</span>
+              </button>
+              <button mat-menu-item (click)="duplicateTask(task)">
+                <mat-icon>content_copy</mat-icon>
+                <span>Duplicar</span>
+              </button>
+              <mat-divider></mat-divider>
+              <button mat-menu-item (click)="deleteTask(task)" class="delete-option">
+                <mat-icon>delete</mat-icon>
+                <span>Eliminar</span>
+              </button>
+            </mat-menu>
+          </div>
+        </mat-card-header>
+
+        <mat-card-content>
+          <h4 class="card-title" [ngClass]="{'completed-title': task.status === 'completed'}">
+            {{ task.title }}
+          </h4>
+          <p class="card-description" *ngIf="task.description">
+            {{ task.description }}
+          </p>
+
+          <div class="card-badges">
+            <mat-chip [ngClass]="'priority-' + task.priority" class="priority-chip">
+              {{ getPriorityLabel(task.priority) }}
+            </mat-chip>
+            <mat-chip class="status-chip">{{ getStatusLabel(task.status) }}</mat-chip>
+          </div>
+
+          <div class="card-meta" *ngIf="task.dueDate || task.listId">
+            <div class="meta-item" *ngIf="task.dueDate">
+              <mat-icon>schedule</mat-icon>
+              <span [ngClass]="{'overdue-date': isOverdue(task)}">
+                {{ formatDueDate(task.dueDate) }}
+              </span>
+            </div>
+            <div class="meta-item" *ngIf="task.listId">
+              <mat-icon [style.color]="getTaskListColor(task)">{{ getTaskListIcon(task) }}</mat-icon>
+              <span>{{ getTaskListName(task) }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="bulk-actions" *ngIf="getCompletedCount() > 0">
+    <mat-card>
+      <mat-card-content>
+        <div class="bulk-actions-content">
+          <span class="bulk-info">{{ getCompletedCount() }} tareas completadas</span>
+          <div class="bulk-buttons">
+            <button mat-stroked-button (click)="markAllAsCompleted()" *ngIf="getPendingCount() > 0">
+              <mat-icon>done_all</mat-icon>
+              Completar todas
+            </button>
+            <button mat-stroked-button color="warn" (click)="deleteCompletedTasks()">
+              <mat-icon>delete_sweep</mat-icon>
+              Eliminar completadas
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

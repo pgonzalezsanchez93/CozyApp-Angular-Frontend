@@ -1,0 +1,131 @@
+<h2 mat-dialog-title>{{ dialogTitle }}</h2>
+
+<div mat-dialog-content>
+  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+
+    <!-- Título del evento -->
+    <mat-form-field appearance="outline" class="w-100 mb-3">
+      <mat-label>Título del evento</mat-label>
+      <input matInput formControlName="title" placeholder="Ingrese el título del evento">
+      <mat-error *ngIf="eventForm.get('title')?.hasError('required')">
+        El título es requerido
+      </mat-error>
+      <mat-error *ngIf="eventForm.get('title')?.hasError('minlength')">
+        El título debe tener al menos 3 caracteres
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Descripción -->
+    <mat-form-field appearance="outline" class="w-100 mb-3">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput
+                formControlName="description"
+                placeholder="Descripción del evento (opcional)"
+                rows="3"
+                maxlength="500">
+      </textarea>
+      <mat-hint align="end">
+        {{ eventForm.get('description')?.value?.length || 0 }}/500
+      </mat-hint>
+    </mat-form-field>
+
+    <!-- Fechas -->
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100 mb-3">
+          <mat-label>Fecha de inicio</mat-label>
+          <input matInput
+                 [matDatepicker]="startPicker"
+                 formControlName="startDate"
+                 placeholder="Seleccione fecha de inicio">
+          <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+          <mat-error *ngIf="eventForm.get('startDate')?.hasError('required')">
+            La fecha de inicio es requerida
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100 mb-3">
+          <mat-label>Fecha de finalización</mat-label>
+          <input matInput
+                 [matDatepicker]="endPicker"
+                 formControlName="endDate"
+                 placeholder="Seleccione fecha de finalización">
+          <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+          <mat-error *ngIf="eventForm.get('endDate')?.hasError('required')">
+            La fecha de finalización es requerida
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Error de rango de fechas -->
+    <div *ngIf="eventForm.hasError('dateRange')" class="error-message mb-3">
+      <mat-icon>error</mat-icon>
+      La fecha de inicio debe ser anterior o igual a la fecha de finalización
+    </div>
+
+    <!-- Estado del evento -->
+    <div class="form-section mb-3">
+      <mat-slide-toggle formControlName="isActive" color="primary">
+        <span class="toggle-label">
+          <mat-icon>{{ eventForm.get('isActive')?.value ? 'event_available' : 'event_busy' }}</mat-icon>
+          Evento activo
+        </span>
+      </mat-slide-toggle>
+
+      <div class="toggle-help-text">
+        {{ eventForm.get('isActive')?.value ?
+           'El evento será visible para todos los usuarios' :
+           'El evento estará oculto para los usuarios' }}
+      </div>
+    </div>
+
+    <!-- Vista previa de duración -->
+    <mat-card class="duration-preview" *ngIf="eventForm.get('startDate')?.value && eventForm.get('endDate')?.value">
+      <mat-card-content>
+        <div class="preview-header">
+          <mat-icon>schedule</mat-icon>
+          <strong>Vista previa del evento</strong>
+        </div>
+
+        <div class="preview-content">
+          <div class="preview-item">
+            <span class="preview-label">Duración:</span>
+            <span class="preview-value">{{ calculateDuration() }} día(s)</span>
+          </div>
+
+          <div class="preview-item">
+            <span class="preview-label">Desde:</span>
+            <span class="preview-value">{{ eventForm.get('startDate')?.value | date:'fullDate':'':'es' }}</span>
+          </div>
+
+          <div class="preview-item">
+            <span class="preview-label">Hasta:</span>
+            <span class="preview-value">{{ eventForm.get('endDate')?.value | date:'fullDate':'':'es' }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" type="button">
+    <mat-icon>cancel</mat-icon>
+    Cancelar
+  </button>
+
+  <button mat-raised-button
+          color="primary"
+          (click)="onSubmit()"
+          [disabled]="eventForm.invalid"
+          type="submit">
+    <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+    {{ isEditMode ? 'Actualizar' : 'Crear' }} evento
+  </button>
+</div>

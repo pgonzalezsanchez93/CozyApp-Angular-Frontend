@@ -1,0 +1,18 @@
+.text-muted {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.9rem;
+}
+
+.small-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.role-container {
+  padding: 8px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.02);
+}

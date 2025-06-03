@@ -1,0 +1,336 @@
+<div *ngIf="isDetailMode" class="task-detail-view">
+  <!-- Header con mejor diseño -->
+  <div mat-dialog-title class="detail-header">
+    <div class="task-status-icon" [ngClass]="{
+      'completed': data.task?.status === 'completed' || data.task?.isCompleted,
+      'pending': data.task?.status === 'pending' && !data.task?.isCompleted,
+      'in-progress': data.task?.status === 'in_progress'
+    }">
+      <mat-icon [ngClass]="{
+        'completed': data.task?.status === 'completed' || data.task?.isCompleted,
+        'pending': data.task?.status === 'pending' && !data.task?.isCompleted,
+        'in-progress': data.task?.status === 'in_progress'
+      }">
+        {{ data.task?.status === 'completed' || data.task?.isCompleted ? 'check_circle' :
+           data.task?.status === 'in_progress' ? 'play_circle' : 'schedule' }}
+      </mat-icon>
+    </div>
+
+    <div class="task-info">
+      <h2 [ngClass]="{ 'completed': data.task?.status === 'completed' || data.task?.isCompleted }">
+        {{ data.task?.title }}
+      </h2>
+
+      <div class="task-badges">
+        <span class="priority-badge" [ngClass]="'priority-' + (data.task?.priority || 'medium')">
+          {{ getPriorityLabel(data.task?.priority || 'medium') }}
+        </span>
+
+        <span *ngIf="data.task?.listId"
+              class="list-badge"
+              [style.background-color]="getTaskListColor()">
+          <mat-icon style="font-size: 14px; width: 14px; height: 14px; margin-right: 4px;">list</mat-icon>
+          {{ getTaskListName() }}
+        </span>
+
+        <span *ngIf="isOverdue()" class="overdue-badge">
+          <mat-icon style="font-size: 14px; width: 14px; height: 14px; margin-right: 4px;">schedule</mat-icon>
+          Vencida
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal sin scroll doble -->
+  <div mat-dialog-content class="detail-content">
+
+    <!-- Sección de descripción -->
+    <div *ngIf="data.task?.description" class="detail-section">
+      <h4>
+        <mat-icon>description</mat-icon>
+        Descripción
+      </h4>
+      <p>{{ data.task?.description }}</p>
+    </div>
+
+    <!-- Sección de fechas -->
+    <div class="detail-section">
+      <h4>
+        <mat-icon>event</mat-icon>
+        Programación
+      </h4>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="label">Fecha de inicio</span>
+          <span>{{ formatDate(data.task?.dueDate) || 'No definida' }}</span>
+        </div>
+
+        <div *ngIf="data.task?.endDate" class="detail-item">
+          <span class="label">Fecha de fin</span>
+          <span>{{ formatDate(data.task?.endDate) }}</span>
+        </div>
+
+        <div *ngIf="!data.task?.allDay && data.task?.startTime" class="detail-item">
+          <span class="label">Hora de inicio</span>
+          <span>{{ data.task?.startTime }}</span>
+        </div>
+
+        <div *ngIf="!data.task?.allDay && data.task?.endTime" class="detail-item">
+          <span class="label">Hora de fin</span>
+          <span>{{ data.task?.endTime }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="label">Duración</span>
+          <span>{{ data.task?.allDay ? 'Todo el día' : 'Horario específico' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de estado e información -->
+    <div class="detail-section">
+      <h4>
+        <mat-icon>info</mat-icon>
+        Estado y detalles
+      </h4>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="label">Estado actual</span>
+          <span [ngClass]="'status-' + (data.task?.status || 'pending')">
+            {{ getStatusLabel(data.task?.status || 'pending') }}
+          </span>
+        </div>
+
+        <div class="detail-item">
+          <span class="label">Prioridad</span>
+          <span [style.color]="getPriorityColor(data.task?.priority || 'medium')">
+            {{ getPriorityLabel(data.task?.priority || 'medium') }}
+          </span>
+        </div>
+
+        <div *ngIf="data.task?.completedAt" class="detail-item">
+          <span class="label">Completada el</span>
+          <span>{{ formatDate(data.task?.completedAt) }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="label">Creada el</span>
+          <span>{{ formatDate(data.task?.createdAt) }}</span>
+        </div>
+      </div>
+    </div>
+
+
+    <div *ngIf="data.task?.listId" class="detail-section">
+      <h4>
+        <mat-icon>folder</mat-icon>
+        Lista de tareas
+      </h4>
+      <div class="detail-item">
+        <span class="label">Pertenece a</span>
+        <span [style.color]="getTaskListColor()">
+          <mat-icon style="font-size: 16px; width: 16px; height: 16px; margin-right: 4px; vertical-align: middle;">
+            list
+          </mat-icon>
+          {{ getTaskListName() }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+
+  <div mat-dialog-actions class="detail-actions">
+    <button mat-button (click)="onCancel()" color="primary">
+      <mat-icon>close</mat-icon>
+      Cerrar
+    </button>
+
+    <button
+      mat-raised-button
+      [color]="data.task?.status === 'completed' || data.task?.isCompleted ? 'warn' : 'primary'"
+      (click)="onCompleteTask()">
+      <mat-icon>{{ data.task?.status === 'completed' || data.task?.isCompleted ? 'undo' : 'check' }}</mat-icon>
+      {{ data.task?.status === 'completed' || data.task?.isCompleted ? 'Marcar pendiente' : 'Completar' }}
+    </button>
+
+    <button mat-raised-button color="accent" (click)="onEditTask()">
+      <mat-icon>edit</mat-icon>
+      Editar
+    </button>
+
+    <button mat-stroked-button color="warn" (click)="onDeleteTask()">
+      <mat-icon>delete</mat-icon>
+      Eliminar
+    </button>
+  </div>
+</div>
+
+
+<div *ngIf="!isDetailMode" class="task-form-view" [ngClass]="{'saving-state': saving}">
+
+  <div mat-dialog-title>
+    <mat-icon style="vertical-align: middle; margin-right: 8px;">
+      {{ isEditMode ? 'edit' : 'add_task' }}
+    </mat-icon>
+    {{ isEditMode ? 'Editar Tarea' : 'Nueva Tarea' }}
+  </div>
+
+  <div mat-dialog-content>
+    <form [formGroup]="taskForm" autocomplete="off">
+
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Título de la tarea</mat-label>
+        <input matInput
+               formControlName="title"
+               required
+               placeholder="Ej: Estudiar para el examen de matemáticas"
+               maxlength="100">
+        <mat-hint>{{ taskForm.get('title')?.value?.length || 0 }}/100</mat-hint>
+        <mat-error *ngIf="taskForm.get('title')?.hasError('required')">
+          El título es obligatorio
+        </mat-error>
+        <mat-error *ngIf="taskForm.get('title')?.hasError('minlength')">
+          El título debe tener al menos 3 caracteres
+        </mat-error>
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descripción (opcional)</mat-label>
+        <textarea matInput
+                  formControlName="description"
+                  rows="3"
+                  placeholder="Añade detalles sobre la tarea..."
+                  maxlength="500"></textarea>
+        <mat-hint>{{ taskForm.get('description')?.value?.length || 0 }}/500</mat-hint>
+      </mat-form-field>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de inicio</mat-label>
+          <input matInput [matDatepicker]="startPicker" formControlName="dueDate">
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Prioridad</mat-label>
+          <mat-select formControlName="priority">
+            <mat-option value="low">
+              <mat-icon style="color: #4caf50; margin-right: 8px;">keyboard_arrow_down</mat-icon>
+              Baja
+            </mat-option>
+            <mat-option value="medium">
+              <mat-icon style="color: #ff9800; margin-right: 8px;">remove</mat-icon>
+              Media
+            </mat-option>
+            <mat-option value="high">
+              <mat-icon style="color: #f44336; margin-right: 8px;">keyboard_arrow_up</mat-icon>
+              Alta
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Lista de tareas -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Lista de tareas</mat-label>
+        <mat-select formControlName="listId">
+          <mat-option [value]="null">
+            <mat-icon style="margin-right: 8px;">clear</mat-icon>
+            Sin lista específica
+          </mat-option>
+          <mat-option *ngFor="let list of taskLists" [value]="list._id">
+            <mat-icon [style.color]="list.color" style="margin-right: 8px;">
+              {{ list.icon || 'list' }}
+            </mat-icon>
+            {{ list.name }}
+          </mat-option>
+        </mat-select>
+        <mat-hint>Organiza tu tarea en una lista temática</mat-hint>
+      </mat-form-field>
+
+      <!-- Estado (solo en modo edición) -->
+      <mat-form-field *ngIf="isEditMode" appearance="outline" class="full-width">
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="status">
+          <mat-option value="pending">
+            <mat-icon style="color: #ff9800; margin-right: 8px;">schedule</mat-icon>
+            Pendiente
+          </mat-option>
+          <mat-option value="in_progress">
+            <mat-icon style="color: #2196f3; margin-right: 8px;">play_circle</mat-icon>
+            En progreso
+          </mat-option>
+          <mat-option value="completed">
+            <mat-icon style="color: #4caf50; margin-right: 8px;">check_circle</mat-icon>
+            Completada
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Configuración de tiempo -->
+      <div style="background: #f9f9f9; padding: 16px; border-radius: 8px; margin: 16px 0;">
+        <div style="display: flex; align-items: center; margin-bottom: 12px;">
+          <mat-icon style="margin-right: 8px; color: #666;">access_time</mat-icon>
+          <span style="font-weight: 500; color: #666;">Configuración de horario</span>
+        </div>
+
+        <mat-checkbox formControlName="allDay" style="margin-bottom: 16px;">
+          Todo el día
+        </mat-checkbox>
+
+
+        <div *ngIf="!isAllDay" class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Hora de inicio</mat-label>
+            <input matInput type="time" formControlName="startTime">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Hora de fin</mat-label>
+            <input matInput type="time" formControlName="endTime">
+          </mat-form-field>
+        </div>
+      </div>
+
+
+      <div style="margin: 16px 0;">
+        <button type="button"
+                mat-button
+                color="primary"
+                (click)="toggleEndDate()"
+                style="margin-bottom: 16px;">
+          <mat-icon>{{ showEndDate ? 'remove' : 'add' }}</mat-icon>
+          {{ showEndDate ? 'Quitar fecha de fin' : 'Añadir fecha de fin' }}
+        </button>
+
+        <mat-form-field *ngIf="showEndDate" appearance="outline" class="full-width">
+          <mat-label>Fecha de fin</mat-label>
+          <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+          <mat-hint>Para tareas que abarcan varios días</mat-hint>
+        </mat-form-field>
+      </div>
+    </form>
+  </div>
+
+
+  <div mat-dialog-actions class="form-actions">
+    <button mat-button (click)="onCancel()" [disabled]="saving">
+      <mat-icon>close</mat-icon>
+      Cancelar
+    </button>
+
+    <button mat-raised-button
+            color="primary"
+            (click)="onSave()"
+            [disabled]="taskForm.invalid || saving">
+      <mat-icon *ngIf="saving">hourglass_empty</mat-icon>
+      <mat-icon *ngIf="!saving">{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+      {{ saving ? 'Guardando...' : (isEditMode ? 'Actualizar' : 'Crear tarea') }}
+    </button>
+  </div>
+</div>

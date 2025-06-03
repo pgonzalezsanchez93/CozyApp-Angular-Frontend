@@ -1,0 +1,59 @@
+<div class="sidenav-container">
+  <div class="user-profile">
+    <div class="user-avatar" [style.background-color]="avatarColor">
+      {{ userInitial }}
+    </div>
+    <div class="user-info">
+      <h3>{{ userName }}</h3>
+      <span *ngIf="isAdmin" class="admin-badge">Administrador</span>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <nav class="nav-menu">
+    <a mat-list-item routerLink="/dashboard/home" routerLinkActive="active" (click)="closeSidenav()">
+      <mat-icon>home</mat-icon>
+      <span>Inicio</span>
+    </a>
+
+    <a mat-list-item routerLink="/dashboard/tasks" routerLinkActive="active" (click)="closeSidenav()">
+      <mat-icon>assignment</mat-icon>
+      <span>Tareas</span>
+    </a>
+
+    <a mat-list-item routerLink="/dashboard/lists" routerLinkActive="active" (click)="closeSidenav()">
+      <mat-icon>list</mat-icon>
+      <span>Listas</span>
+    </a>
+
+    <a mat-list-item routerLink="/dashboard/calendar" routerLinkActive="active" (click)="closeSidenav()">
+      <mat-icon>event</mat-icon>
+      <span>Calendario</span>
+    </a>
+
+    <a mat-list-item routerLink="/dashboard/pomodoro" routerLinkActive="active" (click)="closeSidenav()">
+      <mat-icon>timer</mat-icon>
+      <span>Pomodoro</span>
+    </a>
+
+    <mat-divider></mat-divider>
+
+    <a mat-list-item routerLink="/dashboard/settings" routerLinkActive="active" (click)="closeSidenav()">
+      <mat-icon>settings</mat-icon>
+      <span>Configuración</span>
+    </a>
+
+    <a *ngIf="isAdmin" mat-list-item routerLink="/dashboard/admin" routerLinkActive="active" (click)="closeSidenav()">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span>Administración</span>
+    </a>
+
+    <mat-divider></mat-divider>
+
+    <a mat-list-item (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon>
+      <span>Cerrar sesión</span>
+    </a>
+  </nav>
+</div>

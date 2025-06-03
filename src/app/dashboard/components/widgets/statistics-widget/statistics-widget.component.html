@@ -1,0 +1,89 @@
+<div class="statistics-widget">
+  <div class="widget-header">
+    <h3 class="widget-title">Estadísticas de Productividad</h3>
+    
+    <div class="widget-controls">
+      <div class="timeframe-selector">
+        <button mat-button [class.active]="timeframe === 'day'" (click)="changeTimeframe('day')">Hoy</button>
+        <button mat-button [class.active]="timeframe === 'week'" (click)="changeTimeframe('week')">Semana</button>
+        <button mat-button [class.active]="timeframe === 'month'" (click)="changeTimeframe('month')">Mes</button>
+      </div>
+      
+      <div class="chart-type-selector">
+        <button mat-icon-button matTooltip="Gráfico de barras" [class.active]="chartType === 'bar'" (click)="changeChartType('bar')">
+          <mat-icon>bar_chart</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Gráfico de líneas" [class.active]="chartType === 'line'" (click)="changeChartType('line')">
+          <mat-icon>show_chart</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Gráfico circular" [class.active]="chartType === 'pie'" (click)="changeChartType('pie')">
+          <mat-icon>pie_chart</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="widget-content">
+    <div *ngIf="!tasks || tasks.length === 0" class="empty-data">
+      <mat-icon>insert_chart</mat-icon>
+      <p>No hay datos suficientes para mostrar estadísticas</p>
+    </div>
+    
+    <div *ngIf="tasks && tasks.length > 0">
+      <div class="stats-summary">
+        <div class="summary-item completion-rate">
+          <div class="summary-value">{{ completionRate | number:'1.0-0' }}%</div>
+          <div class="summary-label">Tasa de completado</div>
+        </div>
+        
+        <div class="summary-item tasks-per-day">
+          <div class="summary-value">{{ getCompletedTasksTotal() | number:'1.0-0' }}</div>
+          <div class="summary-label">Tareas completadas</div>
+        </div>
+        
+        <div class="summary-item avg-completion">
+          <div class="summary-value">{{ getCreatedTasksTotal() | number:'1.0-0' }}</div>
+          <div class="summary-label">Tareas creadas</div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <!-- Usar baseChart directiva correctamente -->
+        <canvas baseChart
+                [type]="chartType"
+                [data]="chartData"
+                [options]="chartOptions">
+        </canvas>
+      </div>
+    
+      <div class="tasks-distribution" *ngIf="tasksPerList && tasksPerList.length > 0">
+        <h4>Distribución por listas</h4>
+        
+        <div class="distribution-list">
+          <div *ngFor="let listItem of tasksPerList" class="distribution-item">
+            <div class="list-color" [style.background-color]="listItem.color"></div>
+            <div class="list-name">{{ listItem.name }}</div>
+            <div class="list-count">{{ listItem.count }}</div>
+            <div class="list-bar-container">
+              <div class="list-bar"
+                  [style.width.%]="(listItem.count / tasksPerList[0].count) * 100"
+                  [style.background-color]="listItem.color">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <div class="priority-distribution" *ngIf="tasksByPriority && tasksByPriority.length > 0">
+        <h4>Distribución por prioridad</h4>
+        
+        <div class="priority-chart">
+          <div *ngFor="let prioItem of tasksByPriority" class="priority-item">
+            <div class="priority-label">{{ prioItem.priority }}</div>
+            <div class="priority-count">{{ prioItem.count }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

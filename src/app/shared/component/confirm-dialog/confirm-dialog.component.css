@@ -1,0 +1,239 @@
+.confirm-dialog {
+  min-width: 320px;
+  max-width: 500px;
+  text-align: center;
+}
+
+.dialog-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.dialog-title mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  color: #f44336;
+}
+
+.dialog-content {
+  padding: 20px 24px;
+  text-align: center;
+}
+
+.dialog-message {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+  color: #424242;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  padding: 16px 24px 24px;
+}
+
+.dialog-actions button {
+  min-width: 100px;
+  height: 44px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-transform: none;
+  transition: all 0.3s ease;
+}
+
+.dialog-actions button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.dialog-actions button mat-icon {
+  margin-right: 6px;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.cancel-button {
+  color: #666;
+  border-color: #ddd;
+}
+
+.confirm-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.theme-default .dialog-title {
+  color: #212121;
+}
+
+.theme-default .dialog-title mat-icon {
+  color: #f44336;
+}
+
+.theme-default .dialog-message {
+  color: #424242;
+}
+
+.theme-default .cancel-button {
+  color: #666;
+  border-color: #ddd;
+}
+
+.theme-default .cancel-button:hover {
+  background-color: #f5f5f5;
+}
+
+.theme-default .confirm-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.theme-default .confirm-button:hover {
+  background-color: #d32f2f;
+}
+
+.theme-dark .dialog-title {
+  color: #ffffff;
+}
+
+.theme-dark .dialog-title mat-icon {
+  color: #cf6679;
+}
+
+.theme-dark .dialog-message {
+  color: #b3b3b3;
+}
+
+.theme-dark .cancel-button {
+  color: #b3b3b3;
+  border-color: #444444;
+}
+
+.theme-dark .cancel-button:hover {
+  background-color: #2c2c2c;
+}
+
+.theme-dark .confirm-button {
+  background-color: #cf6679;
+  color: white;
+}
+
+.theme-dark .confirm-button:hover {
+  background-color: #b71c1c;
+}
+
+.theme-light .dialog-title {
+  color: #000000;
+}
+
+.theme-light .dialog-title mat-icon {
+  color: #d93025;
+}
+
+.theme-light .dialog-message {
+  color: #5f6368;
+}
+
+.theme-light .cancel-button {
+  color: #5f6368;
+  border-color: #dadce0;
+}
+
+.theme-light .cancel-button:hover {
+  background-color: #f8f9fa;
+}
+
+.theme-light .confirm-button {
+  background-color: #d93025;
+  color: white;
+}
+
+.theme-light .confirm-button:hover {
+  background-color: #c62828;
+}
+
+.theme-nature .dialog-title {
+  color: #1b5e20;
+}
+
+.theme-nature .dialog-title mat-icon {
+  color: #d32f2f;
+}
+
+.theme-nature .dialog-message {
+  color: #388e3c;
+}
+
+.theme-nature .cancel-button {
+  color: #388e3c;
+  border-color: #c8e6c9;
+}
+
+.theme-nature .cancel-button:hover {
+  background-color: #f1f8e9;
+}
+
+.theme-nature .confirm-button {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.theme-nature .confirm-button:hover {
+  background-color: #c62828;
+}
+
+.theme-ocean .dialog-title {
+  color: #01579b;
+}
+
+.theme-ocean .dialog-title mat-icon {
+  color: #d32f2f;
+}
+
+.theme-ocean .dialog-message {
+  color: #0288d1;
+}
+
+.theme-ocean .cancel-button {
+  color: #0288d1;
+  border-color: #b3e5fc;
+}
+
+.theme-ocean .cancel-button:hover {
+  background-color: #e3f2fd;
+}
+
+.theme-ocean .confirm-button {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.theme-ocean .confirm-button:hover {
+  background-color: #c62828;
+}
+
+@media (max-width: 480px) {
+  .confirm-dialog {
+    min-width: 280px;
+    max-width: 95vw;
+  }
+
+  .dialog-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .dialog-actions button {
+    width: 100%;
+  }
+}
+  

@@ -1,0 +1,62 @@
+<h2 mat-dialog-title>{{ dialogTitle }}</h2>
+
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <div mat-dialog-content>
+    <mat-form-field appearance="outline" class="w-100 mb-3">
+      <mat-label>Nombre</mat-label>
+      <input matInput formControlName="name" placeholder="Nombre del usuario">
+      <mat-error *ngIf="userForm.get('name')?.errors?.['required']">
+        El nombre es obligatorio
+      </mat-error>
+      <mat-error *ngIf="userForm.get('name')?.errors?.['minlength']">
+        El nombre debe tener al menos 3 caracteres
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100 mb-3">
+      <mat-label>Correo Electrónico</mat-label>
+      <input matInput formControlName="email" placeholder="correo@ejemplo.com">
+      <mat-error *ngIf="userForm.get('email')?.errors?.['required']">
+        El correo electrónico es obligatorio
+      </mat-error>
+      <mat-error *ngIf="userForm.get('email')?.errors?.['email']">
+        El correo electrónico no tiene un formato válido
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field *ngIf="!isEditMode" appearance="outline" class="w-100 mb-3">
+      <mat-label>Contraseña</mat-label>
+      <input 
+        matInput 
+        [type]="isPasswordVisible ? 'text' : 'password'" 
+        formControlName="password" 
+        placeholder="Contraseña">
+      <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button">
+        <mat-icon>{{ isPasswordVisible ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="userForm.get('password')?.errors?.['required']">
+        La contraseña es obligatoria
+      </mat-error>
+      <mat-error *ngIf="userForm.get('password')?.errors?.['minlength']">
+        La contraseña debe tener al menos 6 caracteres
+      </mat-error>
+    </mat-form-field>
+
+    <div class="role-container mb-3">
+      <mat-slide-toggle formControlName="isAdmin" color="primary">
+        Usuario Administrador
+      </mat-slide-toggle>
+      <p class="mt-2 text-muted">
+        <mat-icon class="small-icon">info</mat-icon>
+        Los administradores tienen acceso a todas las funcionalidades de gestión del sistema.
+      </p>
+    </div>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
+      {{ isEditMode ? 'Actualizar' : 'Crear' }}
+    </button>
+  </div>
+</form>

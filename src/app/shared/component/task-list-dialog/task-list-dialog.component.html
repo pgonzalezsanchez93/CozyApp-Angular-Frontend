@@ -1,0 +1,218 @@
+<!-- <h2 mat-dialog-title>Gestionar listas de tareas</h2>
+
+<div mat-dialog-content>
+  <div class="row">
+
+    <div class="col-md-5 mb-4 mb-md-0">
+      <div class="list-form-container">
+        <h3>{{ editingListId ? 'Editar lista' : 'Nueva lista' }}</h3>
+
+        <form [formGroup]="listForm" (ngSubmit)="onSubmit()">
+          <mat-form-field appearance="outline" class="w-100 mb-3">
+            <mat-label>Nombre</mat-label>
+            <input matInput formControlName="name" placeholder="Nombre de la lista">
+            <mat-error *ngIf="listForm.get('name')?.errors?.['required']">
+              El nombre es obligatorio
+            </mat-error>
+            <mat-error *ngIf="listForm.get('name')?.errors?.['minlength']">
+              El nombre debe tener al menos 2 caracteres
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-100 mb-3">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput formControlName="description" placeholder="Descripción de la lista" rows="2"></textarea>
+          </mat-form-field>
+
+          <div class="mb-3">
+            <label class="form-label">Color</label>
+            <div class="color-picker">
+              <div
+                *ngFor="let color of colorOptions"
+                class="color-option"
+                [style.background-color]="color"
+                [class.selected]="listForm.get('color')?.value === color"
+                (click)="listForm.get('color')?.setValue(color)">
+              </div>
+            </div>
+          </div>
+
+          <mat-form-field appearance="outline" class="w-100 mb-3">
+            <mat-label>Icono</mat-label>
+            <mat-select formControlName="icon">
+              <mat-option *ngFor="let icon of iconOptions" [value]="icon.value">
+                <mat-icon>{{icon.value}}</mat-icon> {{icon.label}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div class="d-flex gap-2">
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="listForm.invalid || loading"
+              class="flex-grow-1">
+              <mat-icon>{{ editingListId ? 'save' : 'add' }}</mat-icon>
+              {{ editingListId ? 'Actualizar' : 'Crear' }}
+            </button>
+
+            <button
+              *ngIf="editingListId"
+              mat-stroked-button
+              type="button"
+              (click)="resetForm()"
+              class="flex-grow-1">
+              <mat-icon>cancel</mat-icon> Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+    <div class="col-md-7">
+      <h3>Mis listas</h3>
+
+      <div *ngIf="taskLists.length === 0" class="text-center my-4">
+        <p>No has creado ninguna lista todavía.</p>
+      </div>
+
+      <mat-card *ngFor="let list of taskLists" class="mb-2 list-card">
+        <mat-card-content>
+          <div class="d-flex align-items-center">
+            <div class="list-color-indicator" [style.background-color]="list.color"></div>
+
+            <div class="list-info">
+              <div class="d-flex align-items-center">
+                <mat-icon class="me-2">{{ list.icon || 'list' }}</mat-icon>
+                <h4 class="mb-0">{{ list.name }}</h4>
+              </div>
+              <p *ngIf="list.description" class="list-description mb-0">{{ list.description }}</p>
+            </div>
+
+            <div class="list-actions ms-auto">
+              <button mat-icon-button color="primary" (click)="editList(list)" matTooltip="Editar lista">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteList(list)" matTooltip="Eliminar lista">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+</div>
+
+<div *ngIf="loading" class="loading-overlay">
+  <mat-spinner diameter="40"></mat-spinner>
+</div>
+ -->
+
+ <h2 mat-dialog-title class="dialog-title">
+  <mat-icon>{{ isEditMode ? 'edit' : 'add' }}</mat-icon>
+  {{ isEditMode ? 'Editar Lista' : 'Nueva Lista' }}
+</h2>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="listForm" class="list-form">
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre de la lista</mat-label>
+      <input matInput formControlName="name" placeholder="Ej: Trabajo, Personal, Compras...">
+      <mat-error *ngIf="listForm.get('name')?.hasError('required')">
+        El nombre es obligatorio
+      </mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descripción (opcional)</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        placeholder="Describe el propósito de esta lista"
+        rows="2"
+        cdkTextareaAutosize></textarea>
+    </mat-form-field>
+
+    <div class="color-icon-section">
+      <h3>Personalización</h3>
+
+      <div class="customization-row">
+
+        <div class="color-section">
+          <label class="section-label">Color</label>
+          <div class="color-picker">
+            <div class="color-preview" [style.background-color]="selectedColor"></div>
+            <div class="color-options">
+              <button
+                type="button"
+                *ngFor="let color of colorOptions"
+                class="color-option"
+                [style.background-color]="color"
+                [class.selected]="selectedColor === color"
+                (click)="selectColor(color)">
+              </button>
+            </div>
+            <input
+              type="color"
+              class="custom-color-input"
+              [(ngModel)]="selectedColor"
+              [ngModelOptions]="{standalone: true}">
+          </div>
+        </div>
+
+
+        <div class="icon-section">
+          <label class="section-label">Icono</label>
+          <mat-form-field appearance="outline" class="icon-field">
+            <mat-label>Seleccionar icono</mat-label>
+            <mat-select [value]="selectedIcon" (selectionChange)="selectIcon($event.value)">
+              <mat-select-trigger>
+                <mat-icon [style.color]="selectedColor">{{ selectedIcon }}</mat-icon>
+                <span class="icon-label">{{ getIconLabel(selectedIcon) }}</span>
+              </mat-select-trigger>
+
+              <mat-optgroup *ngFor="let group of iconGroups" [label]="group.label">
+                <mat-option *ngFor="let icon of group.icons" [value]="icon.value">
+                  <mat-icon [style.color]="selectedColor">{{ icon.value }}</mat-icon>
+                  <span>{{ icon.label }}</span>
+                </mat-option>
+              </mat-optgroup>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+
+      <div class="preview-section">
+        <label class="section-label">Vista previa</label>
+        <div class="list-preview">
+          <div class="preview-indicator" [style.background-color]="selectedColor"></div>
+          <mat-icon [style.color]="selectedColor">{{ selectedIcon }}</mat-icon>
+          <span>{{ listForm.get('name')?.value || 'Nueva Lista' }}</span>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button
+    mat-fab
+    extended
+    color="primary"
+    (click)="onSave()"
+    [disabled]="listForm.invalid || saving">
+    <mat-icon>{{ saving ? 'hourglass_empty' : 'save' }}</mat-icon>
+    {{ saving ? 'Guardando...' : 'Guardar' }}
+  </button>
+</mat-dialog-actions>

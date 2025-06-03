@@ -1,0 +1,288 @@
+.login100-form {
+  background-color: var(--surface-color, #ffffff);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  max-width: 450px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  color: var(--text-primary, #333);
+}
+
+.login100-form-title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.login100-form-title h2 {
+  font-size: 2rem;
+  color: var(--primary-color, #664E88);
+  font-weight: 600;
+  margin: 0;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.mat-mdc-form-field {
+  font-family: inherit;
+  color: var(--text-primary, #333);
+}
+
+.mat-mdc-form-field-prefix .mat-icon {
+  color: var(--primary-color, #664E88);
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.password-toggle {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+  color: var(--accent-color, #987FB3);
+}
+
+.mat-mdc-outlined .mat-mdc-form-field-outline {
+  color: var(--divider-color, #E6E1F2);
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline-thick {
+  color: var(--primary-color, #664E88);
+}
+
+.mat-mdc-form-field-label {
+  color: var(--text-secondary, #664E88) !important;
+}
+
+.mat-mdc-input-element {
+  color: var(--text-primary, #555555) !important;
+  font-size: 1rem;
+}
+
+.button-container {
+  margin-top: 16px;
+  width: 100%;
+}
+
+.login-button {
+  width: 100%;
+  height: 50px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mat-mdc-raised-button.mat-primary {
+  background-color: var(--primary-color, #664E88);
+  color: white;
+}
+
+.mat-mdc-raised-button.mat-primary:hover {
+  background-color: var(--accent-color, #987FB3);
+}
+
+.mat-mdc-raised-button:disabled {
+  background-color: #cccccc;
+  color: #666666;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.txt1 {
+  font-size: 0.9rem;
+  color: var(--text-secondary, #666666);
+  margin: 0;
+}
+
+.register-btn {
+  font-weight: 600;
+  color: var(--primary-color, #664E88);
+}
+
+.register-btn:hover {
+  background-color: rgba(102, 78, 136, 0.1);
+}
+
+.p-b-49 {
+  padding-bottom: 25px;
+}
+
+.mat-mdc-form-field-error {
+  color: var(--error-color, #e84e4e);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.theme-default .login100-form {
+  background-color: var(--surface-color);
+  border: 1px solid var(--divider-color);
+}
+
+.theme-default .login100-form-title h2 {
+  color: var(--primary-color);
+}
+
+.theme-default .mat-mdc-form-field-prefix .mat-icon {
+  color: var(--primary-color);
+}
+
+.theme-default .register-btn {
+  color: var(--primary-color);
+}
+
+.theme-dark .login100-form {
+  background-color: var(--surface-color);
+  border: 1px solid var(--divider-color);
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.1);
+}
+
+.theme-dark .login100-form-title h2 {
+  color: var(--primary-color);
+}
+
+.theme-dark .mat-mdc-form-field-prefix .mat-icon {
+  color: var(--primary-color);
+}
+
+.theme-dark .txt1 {
+  color: var(--text-secondary);
+}
+
+.theme-dark .register-btn {
+  color: var(--primary-color);
+}
+
+.theme-dark .register-btn:hover {
+  background-color: rgba(187, 134, 252, 0.1);
+}
+
+.theme-cozy .login100-form {
+  background-color: white;
+  border: 1px solid rgba(227, 128, 84, 0.1);
+  box-shadow: 0 8px 30px rgba(227, 128, 84, 0.15);
+}
+
+.theme-cozy .login100-form-title h2 {
+  color: var(--cozy-primary);
+}
+
+.theme-cozy .mat-mdc-form-field-prefix .mat-icon {
+  color: var(--cozy-primary);
+}
+
+.theme-cozy .password-toggle:hover {
+  color: var(--cozy-accent);
+}
+
+.theme-cozy .mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline-thick {
+  color: var(--cozy-primary);
+}
+
+.theme-cozy .mat-mdc-form-field-label {
+  color: rgba(4, 6, 6, 0.7) !important;
+}
+
+.theme-cozy .mat-mdc-input-element {
+  color: var(--cozy-light-text) !important;
+}
+
+.theme-cozy .txt1 {
+  color: rgba(4, 6, 6, 0.7);
+}
+
+.theme-cozy .register-btn {
+  color: var(--cozy-primary);
+}
+
+.theme-cozy .register-btn:hover {
+  background-color: rgba(227, 128, 84, 0.1);
+}
+
+.theme-cozy .mat-mdc-raised-button.mat-primary {
+  background-color: var(--cozy-primary);
+  color: white;
+}
+
+.theme-cozy .mat-mdc-raised-button.mat-primary:hover {
+  background-color: #cd6b42;
+}
+
+.theme-nature .login100-form {
+  background-color: var(--surface-color);
+  border: 1px solid var(--divider-color);
+}
+
+.theme-nature .login100-form-title h2 {
+  color: var(--primary-color);
+}
+
+.theme-nature .mat-mdc-form-field-prefix .mat-icon {
+  color: var(--primary-color);
+}
+
+.theme-nature .register-btn {
+  color: var(--primary-color);
+}
+
+.theme-nature .mat-mdc-raised-button.mat-primary {
+  background-color: var(--primary-color);
+}
+
+.theme-ocean .login100-form {
+  background-color: var(--surface-color);
+  border: 1px solid var(--divider-color);
+}
+
+.theme-ocean .login100-form-title h2 {
+  color: var(--primary-color);
+}
+
+.theme-ocean .mat-mdc-form-field-prefix .mat-icon {
+  color: var(--primary-color);
+}
+
+.theme-ocean .register-btn {
+  color: var(--primary-color);
+}
+
+.theme-ocean .mat-mdc-raised-button.mat-primary {
+  background-color: var(--primary-color);
+}
+
+@media (max-width: 576px) {
+  .login100-form {
+    padding: 30px 25px;
+    margin: 10px;
+  }
+
+  .login100-form-title h2 {
+    font-size: 1.6rem;
+  }
+}
+
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  margin-top: 4px;
+}
+
+::ng-deep .mat-mdc-form-field-outline .mat-mdc-notch {
+  border-color: var(--divider-color, #E6E1F2);
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline .mat-mdc-notch {
+  border-color: var(--primary-color, #664E88);
+}

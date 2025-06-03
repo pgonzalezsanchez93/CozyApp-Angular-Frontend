@@ -1,0 +1,231 @@
+<div class="calendar-container">
+
+  <div class="calendar-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <mat-icon>calendar_today</mat-icon>
+        Calendario
+      </h1>
+      <p class="page-subtitle">Visualiza y gestiona tus tareas por fechas</p>
+    </div>
+    <div class="header-actions">
+      <button mat-stroked-button (click)="openTaskDialog()" class="create-task-btn">
+        <mat-icon>add</mat-icon>
+        Nueva tarea
+      </button>
+      <button mat-icon-button [matMenuTriggerFor]="viewMenu" matTooltip="Opciones de vista">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #viewMenu="matMenu">
+        <button mat-menu-item (click)="changeView('dayGridMonth')">
+          <mat-icon>view_module</mat-icon>
+          <span>Vista mensual</span>
+        </button>
+        <button mat-menu-item (click)="changeView('timeGridWeek')">
+          <mat-icon>view_week</mat-icon>
+          <span>Vista semanal</span>
+        </button>
+        <button mat-menu-item (click)="changeView('timeGridDay')">
+          <mat-icon>view_day</mat-icon>
+          <span>Vista diaria</span>
+        </button>
+        <button mat-menu-item (click)="changeView('listWeek')">
+          <mat-icon>view_list</mat-icon>
+          <span>Lista semanal</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="goToToday()">
+          <mat-icon>today</mat-icon>
+          <span>Ir a hoy</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <div class="filters-row">
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Mostrar tareas</mat-label>
+          <mat-select [(value)]="taskFilter" (selectionChange)="updateCalendarEvents()">
+            <mat-option value="all">Todas las tareas</mat-option>
+            <mat-option value="pending">Solo pendientes</mat-option>
+            <mat-option value="completed">Solo completadas</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Lista</mat-label>
+          <mat-select [(value)]="listFilter" (selectionChange)="updateCalendarEvents()">
+            <mat-option value="all">Todas las listas</mat-option>
+            <mat-option *ngFor="let list of taskLists" [value]="list._id">
+              <div class="list-option">
+                <mat-icon [style.color]="list.color">{{ list.icon }}</mat-icon>
+                {{ list.name }}
+              </div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Prioridad</mat-label>
+          <mat-select [(value)]="priorityFilter" (selectionChange)="updateCalendarEvents()">
+            <mat-option value="all">Todas</mat-option>
+            <mat-option value="high">Alta</mat-option>
+            <mat-option value="medium">Media</mat-option>
+            <mat-option value="low">Baja</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div class="legend-toggle">
+          <button mat-stroked-button (click)="toggleLegend()">
+            <mat-icon>info</mat-icon>
+            {{ showLegend ? 'Ocultar' : 'Mostrar' }} leyenda
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="legend-card" *ngIf="showLegend">
+    <mat-card-header>
+      <mat-card-title>Leyenda</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="legend-grid">
+        <div class="legend-section">
+          <h4>Prioridades</h4>
+          <div class="legend-items">
+            <div class="legend-item">
+              <div class="color-indicator high-priority"></div>
+              <span>Alta prioridad</span>
+            </div>
+            <div class="legend-item">
+              <div class="color-indicator medium-priority"></div>
+              <span>Media prioridad</span>
+            </div>
+            <div class="legend-item">
+              <div class="color-indicator low-priority"></div>
+              <span>Baja prioridad</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="legend-section">
+          <h4>Estados</h4>
+          <div class="legend-items">
+            <div class="legend-item">
+              <div class="color-indicator pending-task"></div>
+              <span>Pendiente</span>
+            </div>
+            <div class="legend-item">
+              <div class="color-indicator completed-task"></div>
+              <span>Completada</span>
+            </div>
+            <div class="legend-item">
+              <div class="color-indicator overdue-task"></div>
+              <span>Vencida</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="legend-section">
+          <h4>Eventos</h4>
+          <div class="legend-items">
+            <div class="legend-item">
+              <div class="color-indicator global-event"></div>
+              <span>Evento global</span>
+            </div>
+            <div class="legend-item">
+              <div class="color-indicator all-day-task"></div>
+              <span>Todo el día</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="calendar-card">
+    <mat-card-content>
+      <div class="calendar-wrapper">
+        <full-calendar
+          #calendar
+          [options]="calendarOptions">
+        </full-calendar>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="summary-card" *ngIf="todayTasks.length > 0">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>today</mat-icon>
+        Resumen de hoy
+      </mat-card-title>
+      <mat-card-subtitle>{{ todayTasks.length }} tareas programadas</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="today-stats">
+        <div class="stat-item">
+          <mat-icon class="stat-icon pending">schedule</mat-icon>
+          <div class="stat-content">
+            <span class="stat-number">{{ getTodayPendingCount() }}</span>
+            <span class="stat-label">Pendientes</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <mat-icon class="stat-icon completed">check_circle</mat-icon>
+          <div class="stat-content">
+            <span class="stat-number">{{ getTodayCompletedCount() }}</span>
+            <span class="stat-label">Completadas</span>
+          </div>
+        </div>
+        <div class="stat-item" *ngIf="getTodayOverdueCount() > 0">
+          <mat-icon class="stat-icon overdue">warning</mat-icon>
+          <div class="stat-content">
+            <span class="stat-number">{{ getTodayOverdueCount() }}</span>
+            <span class="stat-label">Vencidas</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="today-tasks-list">
+        <div class="task-item"
+             *ngFor="let task of (showAllTodayTasks ? todayTasks : todayTasks.slice(0, 5)); trackBy: trackByTaskId"
+             [ngClass]="{'completed-task': task.status === 'completed'}">
+          <button mat-icon-button
+                  (click)="toggleTaskCompletion(task)"
+                  class="completion-btn">
+            <mat-icon [ngClass]="{
+              'completed-icon': task.status === 'completed',
+              'pending-icon': task.status !== 'completed'
+            }">
+              {{ task.status === 'completed' ? 'check_circle' : 'radio_button_unchecked' }}
+            </mat-icon>
+          </button>
+          <div class="task-content">
+            <h4 [ngClass]="{'completed-title': task.status === 'completed'}">{{ task.title }}</h4>
+            <div class="task-meta">
+              <span class="task-time" *ngIf="!task.allDay && task.startTime">
+                {{ task.startTime }}
+              </span>
+              <span class="task-priority priority-{{ task.priority }}">
+                {{ getPriorityLabel(task.priority) }}
+              </span>
+            </div>
+          </div>
+          <button mat-icon-button (click)="editTask(task)" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+
+        <div class="show-more" *ngIf="todayTasks.length > 5">
+          <button mat-button (click)="showAllTodayTasks = !showAllTodayTasks">
+            {{ showAllTodayTasks ? 'Mostrar menos' : 'Ver ' + (todayTasks.length - 5) + ' más' }}
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

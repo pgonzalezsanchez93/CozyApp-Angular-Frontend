@@ -1,0 +1,137 @@
+<h2 mat-dialog-title>Configuración del Pomodoro</h2>
+
+<form [formGroup]="settingsForm" (ngSubmit)="onSave()">
+  <div mat-dialog-content>
+    <p class="mb-4 text-muted">Personaliza los tiempos y opciones para cada tipo de intervalo:</p>
+    
+    <div class="setting-row">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Duración del trabajo (minutos)</mat-label>
+        <input matInput type="number" formControlName="workDuration" min="1" max="60">
+        <mat-hint>Recomendado: 25 minutos</mat-hint>
+        <mat-error *ngIf="settingsForm.get('workDuration')?.errors?.['required']">
+          Este campo es obligatorio
+        </mat-error>
+        <mat-error *ngIf="settingsForm.get('workDuration')?.errors?.['min'] || settingsForm.get('workDuration')?.errors?.['max']">
+          El valor debe estar entre 1 y 60 minutos
+        </mat-error>
+      </mat-form-field>
+    </div>
+    
+    <div class="setting-row">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Duración del descanso corto (minutos)</mat-label>
+        <input matInput type="number" formControlName="shortBreakDuration" min="1" max="30">
+        <mat-hint>Recomendado: 5 minutos</mat-hint>
+        <mat-error *ngIf="settingsForm.get('shortBreakDuration')?.errors?.['required']">
+          Este campo es obligatorio
+        </mat-error>
+        <mat-error *ngIf="settingsForm.get('shortBreakDuration')?.errors?.['min'] || settingsForm.get('shortBreakDuration')?.errors?.['max']">
+          El valor debe estar entre 1 y 30 minutos
+        </mat-error>
+      </mat-form-field>
+    </div>
+    
+    <div class="setting-row">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Duración del descanso largo (minutos)</mat-label>
+        <input matInput type="number" formControlName="longBreakDuration" min="1" max="120">
+        <mat-hint>Recomendado: 15-30 minutos</mat-hint>
+        <mat-error *ngIf="settingsForm.get('longBreakDuration')?.errors?.['required']">
+          Este campo es obligatorio
+        </mat-error>
+        <mat-error *ngIf="settingsForm.get('longBreakDuration')?.errors?.['min'] || settingsForm.get('longBreakDuration')?.errors?.['max']">
+          El valor debe estar entre 1 y 120 minutos
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="setting-row">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Ciclos hasta descanso largo</mat-label>
+        <input matInput type="number" formControlName="sessionsUntilLongBreak" min="1" max="10">
+        <mat-hint>Recomendado: 4 ciclos</mat-hint>
+        <mat-error *ngIf="settingsForm.get('sessionsUntilLongBreak')?.errors?.['required']">
+          Este campo es obligatorio
+        </mat-error>
+        <mat-error *ngIf="settingsForm.get('sessionsUntilLongBreak')?.errors?.['min'] || settingsForm.get('sessionsUntilLongBreak')?.errors?.['max']">
+          El valor debe estar entre 1 y 10 ciclos
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-divider class="my-4"></mat-divider>
+
+    <h4 class="mb-3">Opciones automáticas</h4>
+
+    <div class="setting-row">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <strong>Iniciar descansos automáticamente</strong>
+          <p class="text-muted small mb-0">Los descansos comenzarán automáticamente al finalizar el trabajo</p>
+        </div>
+        <mat-slide-toggle formControlName="autoStartBreaks" color="primary"></mat-slide-toggle>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <strong>Iniciar trabajo automáticamente</strong>
+          <p class="text-muted small mb-0">El trabajo comenzará automáticamente al finalizar los descansos</p>
+        </div>
+        <mat-slide-toggle formControlName="autoStartPomodoros" color="primary"></mat-slide-toggle>
+      </div>
+    </div>
+
+    <mat-divider class="my-4"></mat-divider>
+
+    <h4 class="mb-3">Notificaciones</h4>
+
+    <div class="setting-row">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <strong>Sonido activado</strong>
+          <p class="text-muted small mb-0">Reproducir sonido al completar intervalos</p>
+        </div>
+        <mat-slide-toggle formControlName="soundEnabled" color="primary"></mat-slide-toggle>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <strong>Notificaciones del navegador</strong>
+          <p class="text-muted small mb-0">Mostrar notificaciones al completar intervalos</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <mat-slide-toggle formControlName="notificationsEnabled" color="primary"></mat-slide-toggle>
+          <button 
+            type="button" 
+            mat-icon-button 
+            (click)="requestNotificationPermission()"
+            matTooltip="Solicitar permisos de notificación">
+            <mat-icon>notifications</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div mat-dialog-actions class="d-flex justify-content-between">
+    <button mat-button type="button" (click)="onCancel()" class="me-auto">
+      <mat-icon>close</mat-icon>
+      Cancelar
+    </button>
+    <div class="d-flex gap-2">
+      <button mat-stroked-button type="button" (click)="resetToDefaults()">
+        <mat-icon>restore</mat-icon>
+        Restablecer
+      </button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="settingsForm.invalid">
+        <mat-icon>save</mat-icon>
+        Guardar
+      </button>
+    </div>
+  </div>
+</form>

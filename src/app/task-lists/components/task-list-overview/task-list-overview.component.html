@@ -1,0 +1,324 @@
+<div class="task-lists-overview">
+  <div class="header">
+    <div class="header-content">
+      <h1>Mis Listas de Tareas</h1>
+      <div class="header-actions">
+        <button mat-raised-button
+                color="primary"
+                (click)="openListDialog()"
+                class="create-list-button"
+                matTooltip="Crear una nueva lista de tareas">
+          <mat-icon>add</mat-icon>
+          Nueva lista
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls-section" *ngIf="!loading">
+    <div class="filters-row">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar listas</mat-label>
+        <input matInput
+               [(ngModel)]="searchTerm"
+               (input)="applyFilters()"
+               placeholder="Nombre o descripción">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Color</mat-label>
+        <mat-select [(value)]="colorFilter" (selectionChange)="applyFilters()">
+          <mat-option value="all">Todos los colores</mat-option>
+          <mat-option *ngFor="let color of colorOptions" [value]="color">
+            <div class="color-option">
+              <div class="color-circle" [style.background-color]="color"></div>
+              {{ getColorName(color) }}
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Cantidad de tareas</mat-label>
+        <mat-select [(value)]="taskCountFilter" (selectionChange)="applyFilters()">
+          <mat-option value="all">Todas las listas</mat-option>
+          <mat-option value="empty">Listas vacías</mat-option>
+          <mat-option value="with_tasks">Con tareas</mat-option>
+          <mat-option value="many_tasks">Muchas tareas (5+)</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Ordenar por</mat-label>
+        <mat-select [(value)]="sortBy" (selectionChange)="applyFilters()">
+          <mat-option value="name">Nombre</mat-option>
+          <mat-option value="created">Fecha de creación</mat-option>
+          <mat-option value="task_count">Cantidad de tareas</mat-option>
+          <mat-option value="recent_activity">Actividad reciente</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="view-controls">
+      <mat-button-toggle-group [(ngModel)]="viewMode"
+                               (change)="onViewModeChange()"
+                               aria-label="Modo de vista"
+                               *ngIf="isTableViewAvailable">
+        <mat-button-toggle value="grid" matTooltip="Vista de cuadrícula">
+          <mat-icon>grid_view</mat-icon>
+          Cuadrícula
+        </mat-button-toggle>
+        <mat-button-toggle value="list" matTooltip="Vista de tabla">
+          <mat-icon>table_rows</mat-icon>
+          Tabla
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+
+      <div class="action-buttons">
+        <button mat-button
+                (click)="clearFilters()"
+                [disabled]="!hasActiveFilters()"
+                matTooltip="Eliminar todos los filtros aplicados">
+          <mat-icon>clear_all</mat-icon>
+          Limpiar filtros
+        </button>
+        <button mat-button
+                (click)="exportLists()"
+                matTooltip="Descargar un PDF con todas las listas">
+          <mat-icon>picture_as_pdf</mat-icon>
+          Exportar PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="statistics-section" *ngIf="!loading && taskLists.length > 0">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <mat-icon>list_alt</mat-icon>
+        <div class="stat-content">
+          <span class="stat-number">{{ filteredTaskLists.length }}</span>
+          <span class="stat-label">Listas</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <mat-icon>assignment</mat-icon>
+        <div class="stat-content">
+          <span class="stat-number">{{ getTotalTasksCount() }}</span>
+          <span class="stat-label">Tareas totales</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <mat-icon>palette</mat-icon>
+        <div class="stat-content">
+          <span class="stat-number">{{ getUniqueColorsCount() }}</span>
+          <span class="stat-label">Colores únicos</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <mat-icon>analytics</mat-icon>
+        <div class="stat-content">
+          <span class="stat-number">{{ getAverageTasksPerList() }}</span>
+          <span class="stat-label">Promedio por lista</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content" *ngIf="!loading">
+    <div *ngIf="filteredTaskLists.length === 0" class="empty-state">
+      <mat-icon>list_alt</mat-icon>
+      <h3>No se encontraron listas</h3>
+      <p *ngIf="hasActiveFilters()">
+        Intenta ajustar los filtros o <button mat-button (click)="clearFilters()">limpia todos los filtros</button>
+      </p>
+      <p *ngIf="!hasActiveFilters()">
+        Comienza creando tu primera lista de tareas
+      </p>
+      <button mat-raised-button
+              color="primary"
+              (click)="openListDialog()"
+              *ngIf="!hasActiveFilters()">
+        <mat-icon>add</mat-icon>
+        Crear primera lista
+      </button>
+    </div>
+
+    <div *ngIf="filteredTaskLists.length > 0"
+         class="lists-container"
+         [class.grid-view]="viewMode === 'grid'"
+         [class.list-view]="viewMode === 'list'">
+
+      <div *ngIf="viewMode === 'grid'" class="grid-container">
+        <mat-card *ngFor="let list of filteredTaskLists; trackBy: trackByListId"
+                  class="list-card"
+                  (click)="navigateToList(list)">
+          <mat-card-header>
+            <div mat-card-avatar
+                 class="list-avatar"
+                 [style.background-color]="list.color">
+              <mat-icon [style.color]="getIconColor(list.color)">{{ list.icon }}</mat-icon>
+            </div>
+            <mat-card-title class="list-title">{{ list.name }}</mat-card-title>
+            <mat-card-subtitle class="list-description" *ngIf="list.description">
+              {{ list.description }}
+            </mat-card-subtitle>
+            <div class="card-actions" (click)="$event.stopPropagation()">
+              <button mat-icon-button
+                      [matMenuTriggerFor]="cardMenu"
+                      matTooltip="Opciones de la lista">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #cardMenu="matMenu">
+                <button mat-menu-item (click)="openListDialog(list)">
+                  <mat-icon>edit</mat-icon>
+                  Editar lista
+                </button>
+                <button mat-menu-item (click)="duplicateList(list)">
+                  <mat-icon>content_copy</mat-icon>
+                  Duplicar lista
+                </button>
+                <button mat-menu-item (click)="createTaskInList(list)">
+                  <mat-icon>add_task</mat-icon>
+                  Crear tarea aquí
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="deleteList(list)" class="delete-option">
+                  <mat-icon>delete</mat-icon>
+                  Eliminar lista
+                </button>
+              </mat-menu>
+            </div>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="task-statistics">
+              <div class="task-count">
+                <span class="count">{{ getTaskCountForList(list._id) }}</span>
+                <span class="label">tareas</span>
+              </div>
+              <div class="progress-info">
+                <mat-progress-bar
+                  mode="determinate"
+                  [value]="getProgressPercentage(list._id)"
+                  [color]="getProgressColor(list._id)">
+                </mat-progress-bar>
+                <span class="progress-text">
+                  {{ getCompletedTasksForList(list._id) }} / {{ getTaskCountForList(list._id) }} completadas
+                </span>
+              </div>
+            </div>
+
+            <div class="list-meta">
+              <span class="created-date">
+                Creada el {{ formatDate(list.createdAt) }}
+              </span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div *ngIf="viewMode === 'list'" class="table-container">
+        <table mat-table [dataSource]="filteredTaskLists" class="lists-table">
+          <ng-container matColumnDef="icon">
+            <th mat-header-cell *matHeaderCellDef>Icono</th>
+            <td mat-cell *matCellDef="let list">
+              <div class="table-list-icon" [style.background-color]="list.color">
+                <mat-icon [style.color]="getIconColor(list.color)">{{ list.icon }}</mat-icon>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let list" class="table-list-name">
+              {{ list.name }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Descripción</th>
+            <td mat-cell *matCellDef="let list" class="table-list-description">
+              {{ list.description || 'Sin descripción' }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="totalTasks">
+            <th mat-header-cell *matHeaderCellDef>Total Tareas</th>
+            <td mat-cell *matCellDef="let list" class="table-center">
+              {{ getTaskCountForList(list._id) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="completed">
+            <th mat-header-cell *matHeaderCellDef>Completadas</th>
+            <td mat-cell *matCellDef="let list" class="table-center">
+              {{ getCompletedTasksForList(list._id) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="progress">
+            <th mat-header-cell *matHeaderCellDef>Progreso</th>
+            <td mat-cell *matCellDef="let list" class="table-center">
+              {{ getProgressPercentage(list._id) }}%
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="created">
+            <th mat-header-cell *matHeaderCellDef>Fecha Creación</th>
+            <td mat-cell *matCellDef="let list" class="table-date">
+              {{ formatDate(list.createdAt) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let list" class="table-actions">
+              <button mat-icon-button
+                      (click)="navigateToList(list); $event.stopPropagation()"
+                      matTooltip="Ver tareas de esta lista">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button
+                      [matMenuTriggerFor]="tableMenu"
+                      matTooltip="Más opciones"
+                      (click)="$event.stopPropagation()">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #tableMenu="matMenu">
+                <button mat-menu-item (click)="openListDialog(list)">
+                  <mat-icon>edit</mat-icon>
+                  Editar lista
+                </button>
+                <button mat-menu-item (click)="duplicateList(list)">
+                  <mat-icon>content_copy</mat-icon>
+                  Duplicar lista
+                </button>
+                <button mat-menu-item (click)="createTaskInList(list)">
+                  <mat-icon>add_task</mat-icon>
+                  Crear tarea aquí
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="deleteList(list)" class="delete-option">
+                  <mat-icon>delete</mat-icon>
+                  Eliminar lista
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+              class="table-row"
+              (click)="navigateToList(row)"></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Cargando listas...</p>
+  </div>
+</div>

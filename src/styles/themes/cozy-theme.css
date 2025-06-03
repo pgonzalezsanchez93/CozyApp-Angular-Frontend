@@ -1,0 +1,335 @@
+:root {
+  --cozy-primary: #e38054;
+  --cozy-accent: #7ca66e;
+  --cozy-warn: #cd5825;
+  --cozy-success: #638d56;
+  --cozy-info: #7eaecd;
+  --cozy-warning: #e38054;
+  --cozy-danger: #cd5825;
+  --cozy-light-bg: #faefdc;
+  --cozy-light-surface: #eddfc7;
+  --cozy-dark-bg: #282938;
+  --cozy-dark-surface: #26071a;
+  --cozy-darkest: #040606;
+  --cozy-black: #000001;
+  --cozy-light-text: #2c2c2c; /* Mejorado contraste */
+  --cozy-dark-text: #faefdc;
+  --cozy-medium-text: #5a5a5a; /* Nuevo color para subtítulos */
+}
+
+/* ===== LAYOUT PRINCIPAL ===== */
+.theme-cozy {
+  background-color: var(--cozy-light-bg);
+  color: var(--cozy-light-text);
+}
+
+/* ===== SIDENAV ESPECÍFICO ===== */
+.theme-cozy .sidenav-container {
+  background-color: var(--cozy-light-surface);
+  color: var(--cozy-light-text);
+}
+
+.theme-cozy .user-profile {
+  background: rgba(227, 128, 84, 0.08);
+  border-bottom: 1px solid rgba(227, 128, 84, 0.15);
+  color: var(--cozy-light-text);
+}
+
+.theme-cozy .user-profile:hover {
+  background: rgba(227, 128, 84, 0.12);
+}
+
+.theme-cozy .user-info h3 {
+  color: var(--cozy-light-text);
+  font-weight: 600;
+}
+
+.theme-cozy .admin-badge {
+  color: white;
+  background: var(--cozy-primary);
+  font-weight: 500;
+}
+
+/* Navegación con mejor contraste */
+.theme-cozy .nav-menu a[mat-list-item] {
+  color: var(--cozy-light-text);
+  font-weight: 500;
+}
+
+.theme-cozy .nav-menu a[mat-list-item]:hover {
+  background: rgba(227, 128, 84, 0.12);
+  color: var(--cozy-primary);
+  font-weight: 600;
+}
+
+.theme-cozy .nav-menu a[mat-list-item].active {
+  background: rgba(227, 128, 84, 0.18) !important;
+  color: var(--cozy-primary) !important;
+  font-weight: 700;
+}
+
+/* ===== HEADER ESPECÍFICO ===== */
+.theme-cozy .header-toolbar {
+  background-color: var(--cozy-primary);
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 12px rgba(227, 128, 84, 0.3);
+}
+
+.theme-cozy .app-logo {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 8px;
+}
+
+.theme-cozy .menu-button {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.theme-cozy .menu-button:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+}
+
+.theme-cozy .menu-icon {
+  color: white;
+}
+
+/* Avatar del usuario con contraste mejorado */
+.theme-cozy .user-avatar {
+  background: linear-gradient(135deg, #ffffff, #f5f5f5) !important;
+  color: var(--cozy-primary) !important;
+  border: 3px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.3) !important;
+}
+
+.theme-cozy .user-avatar:hover {
+  border-color: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 6px 24px rgba(255, 255, 255, 0.4) !important;
+}
+
+.theme-cozy .user-initial {
+  text-shadow: 0 1px 3px rgba(227, 128, 84, 0.3);
+  font-weight: 700;
+}
+
+/* ===== COMPONENTES MATERIAL UI ===== */
+.theme-cozy .mat-toolbar {
+  background-color: white !important;
+  color: var(--cozy-light-text) !important;
+}
+
+.theme-cozy .mat-toolbar * {
+  color: var(--cozy-light-text) !important;
+}
+
+.theme-cozy .mat-card {
+  background-color: white !important;
+  color: var(--cozy-light-text) !important;
+  border: 1px solid rgba(227, 128, 84, 0.1);
+  box-shadow: 0 4px 12px rgba(227, 128, 84, 0.05);
+}
+
+.theme-cozy .mat-card-title {
+  color: var(--cozy-light-text) !important;
+  font-weight: 600;
+}
+
+.theme-cozy .mat-card-subtitle {
+  color: var(--cozy-medium-text) !important;
+}
+
+/* ===== BOTONES ===== */
+.theme-cozy .mat-raised-button.mat-primary,
+.theme-cozy .mat-fab.mat-primary,
+.theme-cozy .mat-flat-button.mat-primary,
+.theme-cozy .mat-mdc-raised-button.mat-primary,
+.theme-cozy .mat-mdc-fab.mat-primary {
+  background-color: var(--cozy-primary) !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.theme-cozy .mat-button.mat-primary {
+  color: var(--cozy-primary) !important;
+  font-weight: 600;
+}
+
+.theme-cozy .mat-stroked-button.mat-primary {
+  color: var(--cozy-primary) !important;
+  border-color: var(--cozy-primary) !important;
+  font-weight: 600;
+}
+
+/* ===== FORMULARIOS ===== */
+.theme-cozy .mat-form-field-label {
+  color: var(--cozy-medium-text) !important;
+}
+
+.theme-cozy .mat-input-element {
+  color: var(--cozy-light-text) !important;
+}
+
+.theme-cozy .mat-select-value {
+  color: var(--cozy-light-text) !important;
+}
+
+.theme-cozy .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: rgba(227, 128, 84, 0.3) !important;
+}
+
+.theme-cozy .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: var(--cozy-primary) !important;
+}
+
+/* ===== LISTAS Y OPCIONES ===== */
+.theme-cozy .mat-list-item {
+  color: var(--cozy-light-text) !important;
+}
+
+.theme-cozy .mat-list-item:hover {
+  background-color: rgba(227, 128, 84, 0.08) !important;
+}
+
+.theme-cozy .mat-option {
+  color: var(--cozy-light-text) !important;
+  background-color: white !important;
+}
+
+.theme-cozy .mat-option:hover {
+  background-color: rgba(227, 128, 84, 0.08) !important;
+}
+
+/* ===== COMPONENTES ESPECÍFICOS DE LA APLICACIÓN ===== */
+.theme-cozy .task-item {
+  border-left-color: var(--cozy-primary);
+  background-color: white;
+  color: var(--cozy-light-text);
+  box-shadow: 0 2px 8px rgba(227, 128, 84, 0.05);
+}
+
+.theme-cozy .task-item.completed {
+  border-left-color: var(--cozy-success);
+  background-color: rgba(99, 141, 86, 0.05);
+  color: var(--cozy-light-text);
+}
+
+.theme-cozy .task-item.overdue {
+  border-left-color: var(--cozy-danger);
+  background-color: rgba(205, 88, 37, 0.05);
+  color: var(--cozy-light-text);
+}
+
+/* ===== UTILIDADES DE TEXTO ===== */
+.theme-cozy .text-primary {
+  color: var(--cozy-primary) !important;
+}
+
+.theme-cozy .text-secondary {
+  color: var(--cozy-medium-text) !important;
+}
+
+.theme-cozy .text-muted {
+  color: var(--cozy-medium-text) !important;
+}
+
+/* ===== DIVIDERS CON MEJOR CONTRASTE ===== */
+.theme-cozy mat-divider,
+.theme-cozy .mat-divider {
+  border-color: rgba(227, 128, 84, 0.2) !important;
+}
+
+/* ===== SCROLLBARS PERSONALIZADAS ===== */
+.theme-cozy ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.theme-cozy ::-webkit-scrollbar-track {
+  background: rgba(227, 128, 84, 0.1);
+  border-radius: 4px;
+}
+
+.theme-cozy ::-webkit-scrollbar-thumb {
+  background-color: var(--cozy-primary);
+  border-radius: 4px;
+  border: 1px solid rgba(227, 128, 84, 0.2);
+}
+
+.theme-cozy ::-webkit-scrollbar-thumb:hover {
+  background-color: #cd6b42;
+}
+
+/* ===== MEJORAS ADICIONALES PARA ACCESIBILIDAD ===== */
+.theme-cozy .mat-checkbox-checked .mat-checkbox-background {
+  background-color: var(--cozy-primary) !important;
+}
+
+.theme-cozy .mat-radio-button.mat-radio-checked .mat-radio-outer-circle {
+  border-color: var(--cozy-primary) !important;
+}
+
+.theme-cozy .mat-radio-button.mat-radio-checked .mat-radio-inner-circle {
+  background-color: var(--cozy-primary) !important;
+}
+
+.theme-cozy .mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+  background-color: var(--cozy-accent) !important;
+}
+
+.theme-cozy .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+  background-color: rgba(124, 166, 110, 0.5) !important;
+}
+
+/* ===== ESTADOS DE FOCUS MEJORADOS ===== */
+.theme-cozy .mat-button:focus,
+.theme-cozy .mat-raised-button:focus,
+.theme-cozy .mat-flat-button:focus {
+  outline: 2px solid var(--cozy-primary);
+  outline-offset: 2px;
+}
+
+.theme-cozy .mat-form-field.mat-focused .mat-form-field-label {
+  color: var(--cozy-primary) !important;
+}
+
+/* ===== MEJORAS PARA COMPONENTES ESPECÍFICOS ===== */
+.theme-cozy .pomodoro-card.work-mode {
+  background: linear-gradient(135deg, var(--cozy-primary), #cd6b42);
+  color: white;
+}
+
+.theme-cozy .pomodoro-card.short-break-mode {
+  background: linear-gradient(135deg, var(--cozy-accent), #69915e);
+  color: white;
+}
+
+.theme-cozy .pomodoro-card.long-break-mode {
+  background: linear-gradient(135deg, var(--cozy-info), #6a98b6);
+  color: white;
+}
+
+/* ===== CALENDARIO ===== */
+.theme-cozy .fc-event {
+  background-color: var(--cozy-primary) !important;
+  border-color: var(--cozy-primary) !important;
+  color: white !important;
+}
+
+.theme-cozy .fc-button-primary {
+  background-color: var(--cozy-primary) !important;
+  border-color: var(--cozy-primary) !important;
+  color: white !important;
+}
+
+.theme-cozy .fc-button-primary:hover {
+  background-color: #cd6b42 !important;
+  border-color: #cd6b42 !important;
+}
+
+.theme-cozy .fc-today-button {
+  background-color: var(--cozy-accent) !important;
+  border-color: var(--cozy-accent) !important;
+  color: white !important;
+}
