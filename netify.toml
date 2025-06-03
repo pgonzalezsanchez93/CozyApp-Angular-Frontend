@@ -1,5 +1,5 @@
 [build]
-  publish = "dist/auth-app"
+  publish = "dist/auth-app/browser"
   command = "npm run build:prod"
 
 [build.environment]
