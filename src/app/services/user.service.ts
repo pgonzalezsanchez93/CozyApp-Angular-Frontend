@@ -10,10 +10,10 @@ import { CreateUserDto, UpdateProfileDto } from '../auth/dto';
   providedIn: 'root'
 })
 export class UserService {
-  private readonly baseUrl: string = `${environment.baseUrl}/api/auth`;
-  private http = inject(HttpClient);
+  private readonly baseUrl = environment.baseUrl;
+   constructor(private http: HttpClient) {}
 
-  constructor() { }
+
 
   updateProfile(updateProfileDto: UpdateProfileDto): Observable<User> {
     return this.http.put<User>(`${this.baseUrl}/profile`, updateProfileDto)
@@ -87,17 +87,33 @@ export class UserService {
     );
   }
 
-  async resetPassword(token: string, newPassword: string): Promise<{ message: string }> {
-  return await firstValueFrom(
-    this.http.post<{ message: string }>(`${this.baseUrl}/reset-password`, { 
-      token, 
-      password: newPassword 
-    }).pipe(
-      catchError(err => throwError(() => err.error?.message || 'Error al resetear contraseña'))
-    )
-  );
-}
+ async resetPassword(token: string, newPassword: string): Promise<any> {
+    try {
+      console.log('🚀 UserService: Calling reset password API');
 
+      const response = await firstValueFrom(
+        this.http.post(`${this.baseUrl}/api/auth/reset-password`, {
+          token,
+          password: newPassword
+        })
+      );
+
+      console.log('UserService: Reset password exitoso');
+      return response;
+    } catch (error: any) {
+      console.error(' UserService: Reset password fallo:', error);
+
+      let errorMessage = 'Error al restablecer la contraseña';
+
+      if (error.error?.message) {
+        errorMessage = error.error.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      throw new Error(errorMessage);
+    }
+  }
   changePassword(currentPassword: string, newPassword: string): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.baseUrl}/password/change`, {
       currentPassword,
