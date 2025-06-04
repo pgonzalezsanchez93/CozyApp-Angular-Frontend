@@ -162,6 +162,22 @@
   color: var(--text-secondary, #757575);
 }
 
+.create-task-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
+}
+.create-task-button mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  color: white;
+  vertical-align: middle;
+  margin: 0;
+}
+
 .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));

@@ -1,7 +1,7 @@
 
 <div class="tasks-page">
   <div class="container">
-    <!-- Header de la página -->
+
     <div class="page-header">
       <div class="header-content">
         <div class="title-section">
@@ -18,18 +18,18 @@
       </div>
     </div>
 
-    <!-- Filtros y controles -->
+
     <mat-card class="filters-card">
       <mat-card-content>
         <div class="filters-container">
-          <!-- Barra de búsqueda -->
+
           <mat-form-field appearance="outline" class="search-field">
             <mat-label>Buscar tareas...</mat-label>
             <input matInput [(ngModel)]="searchTerm" (keyup)="applyFilters()">
             <mat-icon matSuffix>search</mat-icon>
           </mat-form-field>
 
-          <!-- Filtros -->
+
           <div class="filter-controls">
             <mat-form-field appearance="outline">
               <mat-label>Estado</mat-label>
@@ -63,7 +63,7 @@
             </mat-form-field>
           </div>
 
-          <!-- Acciones rápidas -->
+
           <div class="quick-actions">
             <button mat-icon-button matTooltip="Limpiar filtros" (click)="clearFilters()"
                     [disabled]="!hasActiveFilters()">
@@ -95,7 +95,7 @@
       </mat-card-content>
     </mat-card>
 
-    <!-- Estadísticas rápidas -->
+
     <div class="stats-row" *ngIf="filteredTasks.length > 0">
       <mat-card class="stat-card">
         <mat-card-content>
@@ -146,15 +146,14 @@
       </mat-card>
     </div>
 
-    <!-- Loading state -->
+
     <div *ngIf="loading" class="loading-container">
       <mat-spinner diameter="40"></mat-spinner>
       <p>Cargando tareas...</p>
     </div>
 
-    <!-- Lista de tareas -->
     <div *ngIf="!loading" class="tasks-container">
-      <!-- Empty state -->
+
       <div *ngIf="filteredTasks.length === 0" class="empty-state">
         <mat-icon>assignment</mat-icon>
         <h3>No hay tareas para mostrar</h3>
@@ -165,13 +164,12 @@
         <p *ngIf="!hasActiveFilters()">
           ¡Comienza creando tu primera tarea!
         </p>
-        <button mat-raised-button color="primary" (click)="openCreateTaskDialog()">
+        <button mat-raised-button color="primary" class="create-task-button" (click)="openCreateTaskDialog()">
           <mat-icon>add</mat-icon>
-          Crear primera tarea
+          <span>Crear tarea</span>
         </button>
       </div>
 
-      <!-- Lista de tareas -->
       <div *ngIf="filteredTasks.length > 0" class="tasks-list">
         <mat-card
           *ngFor="let task of filteredTasks; trackBy: trackByTaskId"
@@ -183,7 +181,7 @@
 
           <mat-card-content>
             <div class="task-content">
-              <!-- Checkbox y título -->
+
               <div class="task-main">
                 <mat-checkbox
                   [checked]="task.status === 'completed'"
@@ -201,9 +199,8 @@
                     {{ task.description }}
                   </p>
 
-                  <!-- Metadatos -->
                   <div class="task-meta">
-                    <!-- Lista -->
+
                     <span *ngIf="getTaskListName(task)" class="list-badge"
                           [style.background-color]="getTaskListColor(task)">
                       <mat-icon>{{ getTaskListIcon(task) }}</mat-icon>

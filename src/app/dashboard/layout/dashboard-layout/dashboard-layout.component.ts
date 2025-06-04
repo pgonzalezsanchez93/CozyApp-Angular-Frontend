@@ -9,12 +9,12 @@ import { AuthService } from '../../../auth/services/auth-service.service';
 @Component({
   selector: 'app-dashboard-layout',
   templateUrl: './dashboard-layout.component.html',
-  styleUrl: './dashboard-layout.component.css'
+  styleUrls: ['./dashboard-layout.component.css']
 })
 export class DashboardLayoutComponent implements OnInit {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   isMobile = false;
-  
+
   private themeService = inject(ThemeService);
   private authService = inject(AuthService);
   private renderer = inject(Renderer2);
@@ -51,11 +51,11 @@ export class DashboardLayoutComponent implements OnInit {
   private applyTheme(themeId: string): void {
     const element = this.elementRef.nativeElement;
     const themeClasses = ['theme-default', 'theme-dark', 'theme-light', 'theme-nature', 'theme-ocean', 'theme-cozy'];
-    
+
     themeClasses.forEach(themeClass => {
       this.renderer.removeClass(element, themeClass);
     });
-    
+
     this.renderer.addClass(element, `theme-${themeId}`);
   }
 

@@ -136,13 +136,10 @@
       <p *ngIf="!hasActiveFilters()">
         Comienza creando tu primera lista de tareas
       </p>
-      <button mat-raised-button
-              color="primary"
-              (click)="openListDialog()"
-              *ngIf="!hasActiveFilters()">
-        <mat-icon>add</mat-icon>
-        Crear primera lista
-      </button>
+        <button mat-raised-button color="primary" class="create-task-button" (click)="openCreateTaskDialog()">
+          <mat-icon>add</mat-icon>
+          <span>Crea tu primera lista de tarea</span>
+        </button>
     </div>
 
     <div *ngIf="filteredTaskLists.length > 0"

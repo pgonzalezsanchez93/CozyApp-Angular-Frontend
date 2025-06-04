@@ -10,7 +10,7 @@ import { MaterialModule } from '../material/material.module';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { UserFormDialogComponent } from './components/user-form-dialog/user-form-dialog.component';
-import { NgChartsModule } from 'ng2-charts';
+
 
 
 
@@ -31,7 +31,7 @@ import { NgChartsModule } from 'ng2-charts';
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    NgChartsModule,
+
 
   ],
   exports: [

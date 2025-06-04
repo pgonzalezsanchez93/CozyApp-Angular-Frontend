@@ -11,6 +11,8 @@ import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/cor
 import { CoreModule } from './core/core.module';
 import { ThemeService } from './core/services/theme.service';
 import { MaterialModule } from './material/material.module';
+import { SharedModule } from './shared/shared.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -19,23 +21,14 @@ import { MaterialModule } from './material/material.module';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    AppRoutingModule,
     HttpClientModule,
-    MaterialModule,
-    CoreModule
+    RouterModule,
+    AppRoutingModule,
+    CoreModule,
+    SharedModule,
+    MaterialModule
   ],
-  providers: [
-    { provide: LOCALE_ID, useValue: 'es-ES' },
-    { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
-    provideAnimationsAsync(),
-    provideNativeDateAdapter(),
-    ThemeService,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      multi: true
-    }
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
