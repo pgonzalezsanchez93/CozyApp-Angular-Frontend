@@ -166,7 +166,7 @@ export class AuthService {
   }
 
   updateProfile(name: string, currentPassword?: string, newPassword?: string): Observable<User> {
-    const url = `${this.baseUrl}/api/auth/profile`;
+    const url = `${this.baseUrl}/auth/profile`;
     const body: any = { name };
 
     if (currentPassword && newPassword) {
@@ -203,7 +203,7 @@ export class AuthService {
 
 
   requestPasswordReset(email: string): Observable<{ message: string }> {
-  return this.http.post<{ message: string }>(`${this.baseUrl}/api/auth/password/request-reset`, { email })
+  return this.http.post<{ message: string }>(`${this.baseUrl}/auth/password/request-reset`, { email })
     .pipe(
       catchError(err => {
         const errorMessage = typeof err.error?.message === 'string'
@@ -215,9 +215,9 @@ export class AuthService {
 }
 
 resetPassword(token: string, newPassword: string): Observable<{ message: string }> {
-  return this.http.post<{ message: string }>(`${this.baseUrl}/api/auth/reset-password`, { 
-    token, 
-    password: newPassword 
+  return this.http.post<{ message: string }>(`${this.baseUrl}/auth/reset-password`, {
+    token,
+    password: newPassword
   }).pipe(
     catchError(err => {
       const errorMessage = typeof err.error?.message === 'string'
@@ -230,10 +230,10 @@ resetPassword(token: string, newPassword: string): Observable<{ message: string 
 
 
   changePassword(passwordData: { currentPassword: string, newPassword: string }): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.baseUrl}/api/auth/password/change`, passwordData);
+    return this.http.post<{ message: string }>(`${this.baseUrl}/auth/password/change`, passwordData);
   }
 
   deleteAccount(): Observable<{ message: string }> {
-    return this.http.delete<{ message: string }>(`${this.baseUrl}/api/auth/delete-account`);
+    return this.http.delete<{ message: string }>(`${this.baseUrl}/auth/delete-account`);
   }
 }
